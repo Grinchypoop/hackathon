@@ -806,6 +806,57 @@
             line-height: 1.6;
         }
 
+        /* Countdown */
+        .countdown {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .countdown-unit { text-align: center; }
+
+        .countdown-num {
+            display: block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 800;
+            color: #fff;
+            line-height: 1;
+            min-width: 70px;
+        }
+
+        .countdown-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.6rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-top: 0.3rem;
+            display: block;
+        }
+
+        .countdown-sep {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2rem;
+            color: var(--pink);
+            font-weight: 700;
+            padding-bottom: 1.2rem;
+            animation: blink 1s step-end infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        .countdown-sub {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--comment);
+            margin-bottom: 2.5rem;
+        }
+
         /* Footer */
         footer {
             text-align: center;
@@ -880,6 +931,31 @@
         <span class="letter">F</span><span class="letter">R</span><span class="letter">I</span><span class="letter">C</span><span class="letter">T</span><span class="letter">I</span><span class="letter">O</span><span class="letter">N</span>
     </h1>
     <p class="tagline"><span class="comment">// </span>Stop removing it. Start understanding it.</p>
+
+    <!-- Countdown -->
+    <div class="countdown" id="countdown">
+        <div class="countdown-unit">
+            <span class="countdown-num" id="cd-days">00</span>
+            <span class="countdown-label">days</span>
+        </div>
+        <div class="countdown-sep">:</div>
+        <div class="countdown-unit">
+            <span class="countdown-num" id="cd-hours">00</span>
+            <span class="countdown-label">hours</span>
+        </div>
+        <div class="countdown-sep">:</div>
+        <div class="countdown-unit">
+            <span class="countdown-num" id="cd-mins">00</span>
+            <span class="countdown-label">mins</span>
+        </div>
+        <div class="countdown-sep">:</div>
+        <div class="countdown-unit">
+            <span class="countdown-num" id="cd-secs">00</span>
+            <span class="countdown-label">secs</span>
+        </div>
+    </div>
+    <div class="countdown-sub">// launches April 13 &mdash; submissions due April 27</div>
+
     <a href="#register" class="cta">git commit -m "register" &rarr;</a>
     <div class="scroll-hint">&darr; scroll()</div>
 </section>
@@ -1267,6 +1343,36 @@
         `;
         confettiContainer.appendChild(particle);
     }
+
+    // Countdown timer — launches April 13, 2026 midnight BST (UTC+6)
+    const launchDate = new Date('2026-04-13T00:00:00+06:00').getTime();
+
+    function updateCountdown() {
+        const now = Date.now();
+        const diff = launchDate - now;
+
+        if (diff <= 0) {
+            document.getElementById('cd-days').textContent = '00';
+            document.getElementById('cd-hours').textContent = '00';
+            document.getElementById('cd-mins').textContent = '00';
+            document.getElementById('cd-secs').textContent = '00';
+            document.querySelector('.countdown-sub').textContent = '// LIVE NOW — submissions due April 27';
+            return;
+        }
+
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const secs = Math.floor((diff % (1000 * 60)) / 1000);
+
+        document.getElementById('cd-days').textContent = String(days).padStart(2, '0');
+        document.getElementById('cd-hours').textContent = String(hours).padStart(2, '0');
+        document.getElementById('cd-mins').textContent = String(mins).padStart(2, '0');
+        document.getElementById('cd-secs').textContent = String(secs).padStart(2, '0');
+    }
+
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
 
     // Animate hero letters on load
     document.querySelectorAll('.hero h1 .letter').forEach((letter, i) => {
