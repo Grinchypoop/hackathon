@@ -1,0 +1,1284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FRICTION — Hackathon 2026</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #000000;
+            --surface: #0a0a0a;
+            --surface-2: #111111;
+            --border: #1a1a1a;
+            --text: #e8edf2;
+            --muted: #6b8299;
+            --yellow: #f5c542;
+            --pink: #e8395b;
+            --cyan: #2dd4bf;
+            --teal: #14b8a6;
+            --magenta: #d946ef;
+            --orange: #f97316;
+            --blue: #3b82f6;
+            --green: #22c55e;
+            --comment: #546e7a;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Fragments removed — clean black bg */
+
+        /* Confetti particles */
+        .confetti-container {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .confetti {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            opacity: 0;
+            animation: confettiFall linear infinite;
+        }
+
+        @keyframes confettiFall {
+            0% { transform: translateY(-10px) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.8; }
+            90% { opacity: 0.8; }
+            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        nav .logo {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        nav .logo .sym { color: var(--pink); }
+        nav .logo .fn { color: var(--yellow); }
+        nav .logo .paren { color: var(--cyan); }
+
+        nav .nav-links a {
+            color: var(--muted);
+            text-decoration: none;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            transition: color 0.3s;
+            margin-left: 2rem;
+        }
+
+        nav .nav-links a:hover { color: var(--yellow); }
+
+        /* Hero */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .code-badge {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--comment);
+            margin-bottom: 2rem;
+            padding: 0.6rem 1.2rem;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+        }
+
+        .code-badge .kw { color: var(--pink); }
+        .code-badge .str { color: var(--green); }
+        .code-badge .cm { color: var(--comment); }
+
+        .hero h1 {
+            font-family: 'Inter', sans-serif;
+            font-size: clamp(4rem, 13vw, 11rem);
+            font-weight: 900;
+            letter-spacing: -4px;
+            line-height: 0.85;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero h1 .letter { display: inline-block; }
+        .hero h1 .letter:nth-child(1) { color: var(--yellow); }
+        .hero h1 .letter:nth-child(2) { color: var(--pink); }
+        .hero h1 .letter:nth-child(3) { color: var(--cyan); }
+        .hero h1 .letter:nth-child(4) { color: var(--yellow); }
+        .hero h1 .letter:nth-child(5) { color: var(--magenta); }
+        .hero h1 .letter:nth-child(6) { color: var(--pink); }
+        .hero h1 .letter:nth-child(7) { color: var(--cyan); }
+        .hero h1 .letter:nth-child(8) { color: var(--orange); }
+
+        .hero .tagline {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: clamp(0.85rem, 2vw, 1.1rem);
+            color: var(--muted);
+            max-width: 500px;
+            margin-bottom: 2.5rem;
+        }
+
+        .hero .tagline .comment { color: var(--comment); }
+
+        .hero .cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 1rem 2.5rem;
+            background: var(--yellow);
+            color: var(--bg);
+            text-decoration: none;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            font-size: 0.85rem;
+            border-radius: 8px;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .hero .cta:hover {
+            background: #fff;
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(245, 197, 66, 0.25);
+        }
+
+        .scroll-hint {
+            position: absolute;
+            bottom: 2rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            color: var(--comment);
+            animation: bob 2s ease-in-out infinite;
+        }
+
+        @keyframes bob {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(8px); }
+        }
+
+        /* Sections */
+        section {
+            max-width: 880px;
+            margin: 0 auto;
+            padding: 6rem 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .section-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-label .comment-sym { color: var(--comment); }
+        .section-label .tag { color: var(--pink); }
+
+        h2 {
+            font-family: 'Inter', sans-serif;
+            font-size: clamp(1.8rem, 4vw, 2.8rem);
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            line-height: 1.15;
+            letter-spacing: -1px;
+        }
+
+        h2 .highlight {
+            background: linear-gradient(120deg, var(--yellow), var(--orange));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        p.body-text {
+            color: var(--muted);
+            font-size: 1.05rem;
+            max-width: 600px;
+            line-height: 1.8;
+        }
+
+        /* Divider */
+        .divider {
+            max-width: 880px;
+            margin: 0 auto;
+            height: 1px;
+            background: var(--border);
+            position: relative;
+        }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 60px;
+            height: 1px;
+            background: var(--pink);
+        }
+
+        /* Theme section */
+        .theme-quote {
+            font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+            line-height: 1.7;
+            color: var(--text);
+            border-left: 3px solid var(--yellow);
+            padding-left: 1.5rem;
+            margin: 2rem 0;
+            max-width: 620px;
+            font-weight: 300;
+        }
+
+        .theme-quote strong { color: var(--yellow); font-weight: 600; }
+
+        /* Code block */
+        .code-block {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            text-align: left;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            line-height: 1.8;
+            overflow-x: auto;
+        }
+
+        .code-block .dots { display: flex; gap: 6px; margin-bottom: 1rem; }
+        .code-block .dot { width: 10px; height: 10px; border-radius: 50%; }
+        .code-block .dot-r { background: var(--pink); }
+        .code-block .dot-y { background: var(--yellow); }
+        .code-block .dot-g { background: var(--green); }
+        .code-block .kw { color: var(--pink); }
+        .code-block .fn { color: var(--yellow); }
+        .code-block .str { color: var(--green); }
+        .code-block .cm { color: var(--comment); }
+        .code-block .var { color: var(--cyan); }
+        .code-block .num { color: var(--orange); }
+        .code-block .op { color: var(--magenta); }
+
+        /* Info grid */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 1.2rem;
+            margin-top: 3rem;
+        }
+
+        .info-card {
+            background: var(--surface);
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .info-card:hover {
+            border-color: var(--cyan);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .info-card .accent-bar {
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            border-radius: 12px 12px 0 0;
+        }
+
+        .info-card:nth-child(1) .accent-bar { background: var(--pink); }
+        .info-card:nth-child(2) .accent-bar { background: var(--yellow); }
+        .info-card:nth-child(3) .accent-bar { background: var(--cyan); }
+
+        .info-card .number {
+            font-family: 'Inter', sans-serif;
+            font-size: 3rem;
+            font-weight: 900;
+            margin-bottom: 0.3rem;
+        }
+
+        .info-card:nth-child(1) .number { color: var(--pink); }
+        .info-card:nth-child(2) .number { color: var(--yellow); }
+        .info-card:nth-child(3) .number { color: var(--cyan); }
+
+        .info-card .label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 0.8rem;
+        }
+
+        .info-card .desc { font-size: 0.9rem; color: var(--muted); line-height: 1.6; }
+
+        /* How it works - Pipeline */
+        .pipeline {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr auto 1fr;
+            gap: 0;
+            align-items: start;
+            margin-top: 3rem;
+        }
+
+        .pipe-step {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem 1.5rem;
+            text-align: center;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .pipe-step:hover {
+            border-color: var(--cyan);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .pipe-step-num {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.6rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 0.8rem;
+        }
+
+        .pipe-step:nth-child(1) .pipe-step-num { color: var(--pink); }
+        .pipe-step:nth-child(3) .pipe-step-num { color: var(--yellow); }
+        .pipe-step:nth-child(5) .pipe-step-num { color: var(--green); }
+
+        .pipe-step-icon {
+            font-size: 2rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .pipe-step h3 {
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .pipe-step p {
+            font-size: 0.8rem;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        .pipe-arrow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding-top: 3rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.2rem;
+            color: var(--comment);
+        }
+
+        /* Battle Pass badge */
+        .battle-pass-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: linear-gradient(135deg, rgba(245, 197, 66, 0.1), rgba(249, 115, 22, 0.1));
+            border: 1px solid rgba(245, 197, 66, 0.25);
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            margin-top: 0.8rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            color: var(--yellow);
+        }
+
+        /* Prizes */
+        .prizes {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.2rem;
+            margin-top: 3rem;
+        }
+
+        .prize-card {
+            background: var(--surface);
+            padding: 2.5rem 1.5rem;
+            text-align: center;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s;
+        }
+
+        .prize-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .prize-card.first { border-color: rgba(245, 197, 66, 0.3); }
+        .prize-card.second { border-color: rgba(192, 192, 192, 0.2); }
+        .prize-card.third { border-color: rgba(205, 127, 50, 0.2); }
+        .prize-card.first:hover { border-color: var(--yellow); box-shadow: 0 15px 40px rgba(245, 197, 66, 0.15); }
+
+        .prize-badge {
+            display: inline-block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.55rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            margin-bottom: 1.2rem;
+        }
+
+        .prize-card.first .prize-badge { background: rgba(245, 197, 66, 0.15); color: var(--yellow); }
+        .prize-card.second .prize-badge { background: rgba(192, 192, 192, 0.1); color: #c0c0c0; }
+        .prize-card.third .prize-badge { background: rgba(205, 127, 50, 0.1); color: #cd7f32; }
+
+        .prize-icon {
+            width: 50px; height: 50px;
+            margin: 0 auto 1rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .prize-card.first .prize-icon { background: rgba(245, 197, 66, 0.1); }
+        .prize-card.second .prize-icon { background: rgba(192, 192, 192, 0.08); }
+        .prize-card.third .prize-icon { background: rgba(205, 127, 50, 0.08); }
+
+        .prize-amount {
+            font-family: 'Inter', sans-serif;
+            font-size: clamp(1.6rem, 3vw, 2.4rem);
+            font-weight: 900;
+            margin-bottom: 0.3rem;
+        }
+
+        .prize-card.first .prize-amount { color: var(--yellow); }
+        .prize-card.second .prize-amount { color: #c0c0c0; }
+        .prize-card.third .prize-amount { color: #cd7f32; }
+
+        .prize-currency { font-size: 0.75rem; color: var(--muted); }
+
+        /* Requirements */
+        .req-list {
+            list-style: none;
+            margin-top: 2rem;
+        }
+
+        .req-list li {
+            padding: 1.5rem 1.5rem 1.5rem 0;
+            border-bottom: 1px solid var(--border);
+            display: grid;
+            grid-template-columns: 4rem 1fr;
+            gap: 0.5rem;
+            align-items: start;
+        }
+
+        .req-list li:first-child { border-top: 1px solid var(--border); }
+
+        .req-num {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.5rem;
+            font-weight: 800;
+        }
+
+        .req-list li:nth-child(1) .req-num { color: var(--pink); }
+        .req-list li:nth-child(2) .req-num { color: var(--yellow); }
+        .req-list li:nth-child(3) .req-num { color: var(--cyan); }
+
+        .req-content h3 {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+        }
+
+        .req-content p { font-size: 0.9rem; color: var(--muted); line-height: 1.7; }
+
+        /* Forms shared styles */
+        .form-section {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 3.5rem;
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .form-section .corner-tl,
+        .form-section .corner-br {
+            position: absolute;
+            width: 80px; height: 80px;
+            opacity: 0.15;
+        }
+
+        .form-section .corner-tl {
+            top: 0; left: 0;
+            background: linear-gradient(135deg, var(--pink), transparent);
+            border-radius: 16px 0 0 0;
+        }
+
+        .form-section .corner-br {
+            bottom: 0; right: 0;
+            background: linear-gradient(315deg, var(--cyan), transparent);
+            border-radius: 0 0 16px 0;
+        }
+
+        .form-section h2 { margin-bottom: 0.5rem; }
+        .form-section .sub { color: var(--muted); margin-bottom: 2rem; font-size: 0.9rem; }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            letter-spacing: 1px;
+            color: var(--muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-group label .req { color: var(--pink); }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.85rem 1rem;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+            outline: none;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: var(--yellow);
+            box-shadow: 0 0 0 3px rgba(245, 197, 66, 0.1);
+        }
+
+        .form-group textarea { min-height: 80px; resize: vertical; }
+        .form-group input::placeholder,
+        .form-group textarea::placeholder { color: #2d4050; }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .member-block {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            text-align: left;
+            position: relative;
+        }
+
+        .member-block .member-accent {
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            border-radius: 10px 10px 0 0;
+            background: linear-gradient(90deg, var(--pink), var(--yellow), var(--cyan));
+        }
+
+        .member-block h4 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--yellow);
+            margin-bottom: 1rem;
+        }
+
+        .add-member-btn {
+            background: transparent;
+            border: 1px dashed var(--border);
+            border-radius: 8px;
+            color: var(--muted);
+            padding: 0.8rem;
+            width: 100%;
+            cursor: pointer;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            transition: all 0.3s;
+            margin-bottom: 1.5rem;
+        }
+
+        .add-member-btn:hover {
+            border-color: var(--cyan);
+            color: var(--cyan);
+            background: rgba(45, 212, 191, 0.05);
+        }
+
+        .remove-member-btn {
+            background: transparent;
+            border: 1px solid rgba(232, 57, 91, 0.2);
+            border-radius: 4px;
+            color: var(--pink);
+            padding: 0.3rem 0.7rem;
+            cursor: pointer;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.6rem;
+            float: right;
+            transition: all 0.3s;
+        }
+
+        .remove-member-btn:hover { background: rgba(232, 57, 91, 0.1); }
+
+        .submit-btn {
+            display: inline-block;
+            padding: 1rem 3rem;
+            background: linear-gradient(135deg, var(--yellow), var(--orange));
+            color: var(--bg);
+            border: none;
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 1.5rem;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(245, 197, 66, 0.25);
+        }
+
+        .submit-btn.green-btn {
+            background: linear-gradient(135deg, var(--green), var(--teal));
+        }
+
+        .submit-btn.green-btn:hover {
+            box-shadow: 0 12px 35px rgba(34, 197, 94, 0.25);
+        }
+
+        .entry-fee-note {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--muted);
+            margin-top: 1.5rem;
+            padding: 0.8rem 1rem;
+            background: rgba(245, 197, 66, 0.05);
+            border: 1px solid rgba(245, 197, 66, 0.15);
+            border-radius: 6px;
+            display: inline-block;
+        }
+
+        .entry-fee-note span { color: var(--yellow); font-weight: 700; }
+
+        /* Battle pass code input special style */
+        .battlepass-input {
+            text-align: center !important;
+            font-size: 1.3rem !important;
+            letter-spacing: 8px !important;
+            font-weight: 700 !important;
+            text-transform: uppercase;
+            padding: 1.2rem 1rem !important;
+        }
+
+        .battlepass-input:focus {
+            border-color: var(--green) !important;
+            box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.15) !important;
+        }
+
+        .battlepass-input::placeholder {
+            letter-spacing: 4px !important;
+            font-size: 0.85rem !important;
+            font-weight: 400 !important;
+        }
+
+        /* Tab switcher for forms */
+        .form-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            justify-content: center;
+        }
+
+        .form-tab {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            padding: 0.6rem 1.5rem;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--muted);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .form-tab:hover { border-color: var(--muted); }
+
+        .form-tab.active {
+            background: rgba(245, 197, 66, 0.1);
+            border-color: var(--yellow);
+            color: var(--yellow);
+        }
+
+        .form-tab.active-green {
+            background: rgba(34, 197, 94, 0.1);
+            border-color: var(--green);
+            color: var(--green);
+        }
+
+        .form-panel { display: none; }
+        .form-panel.active { display: block; }
+
+        /* Battle pass info box */
+        .bp-info {
+            background: rgba(34, 197, 94, 0.05);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            text-align: left;
+        }
+
+        .bp-info h4 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--green);
+            margin-bottom: 0.5rem;
+            letter-spacing: 1px;
+        }
+
+        .bp-info p {
+            font-size: 0.85rem;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 3rem 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .footer-line {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--comment);
+        }
+
+        .footer-line .tag { color: var(--pink); }
+        .footer-line .attr { color: var(--yellow); }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .pipeline {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+            .pipe-arrow {
+                transform: rotate(90deg);
+                padding: 0.8rem 0;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .prizes { grid-template-columns: 1fr; }
+            .form-row { grid-template-columns: 1fr; }
+            .form-section { padding: 2rem 1.2rem; }
+            section { padding: 4rem 1.5rem; }
+            nav .nav-links a { margin-left: 1rem; }
+            .form-tabs { flex-direction: column; }
+        }
+
+        /* Animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(25px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+
+        .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+        ::selection { background: rgba(245, 197, 66, 0.3); color: #fff; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+    </style>
+</head>
+<body>
+
+<!-- Confetti particles -->
+<div class="confetti-container" id="confetti"></div>
+
+<nav>
+    <div class="logo"><span class="sym">$</span> <span class="fn">friction</span><span class="paren">()</span></div>
+    <div class="nav-links">
+        <a href="#register">register</a>
+        <a href="#register" onclick="setTimeout(()=>switchTab('submit-panel',document.querySelectorAll('.form-tab')[1]),100)">submit</a>
+    </div>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+    <div class="code-badge"><span class="kw">const</span> hackathon = <span class="str">"friction"</span>; <span class="cm">// 2 weeks</span></div>
+    <h1>
+        <span class="letter">F</span><span class="letter">R</span><span class="letter">I</span><span class="letter">C</span><span class="letter">T</span><span class="letter">I</span><span class="letter">O</span><span class="letter">N</span>
+    </h1>
+    <p class="tagline"><span class="comment">// </span>Stop removing it. Start understanding it.</p>
+    <a href="#register" class="cta">git commit -m "register" &rarr;</a>
+    <div class="scroll-hint">&darr; scroll()</div>
+</section>
+
+<!-- Theme -->
+<div class="divider"></div>
+<section id="theme" class="fade-in">
+    <div class="section-label"><span class="comment-sym">//</span> <span class="tag">theme</span></div>
+    <h2>One word.<br><span class="highlight">Infinite interpretations.</span></h2>
+    <div class="theme-quote">
+        Something slows everything down. We've spent decades trying to remove it &mdash; faster payments, smoother interfaces, instant everything.<br><br>
+        But maybe we got that wrong.<br><br>
+        Your job is not to remove friction. Your job is to <strong>understand</strong> it. Build something that takes a position.
+    </div>
+    <p class="body-text" style="margin-top: 1.5rem;">
+        We don't care what you build. We care <em>why</em>. Interpret the theme however you want &mdash; social friction, mechanical friction, cognitive friction, creative friction. Take a stance. Ship it.
+    </p>
+
+    <div class="code-block">
+        <div class="dots">
+            <div class="dot dot-r"></div>
+            <div class="dot dot-y"></div>
+            <div class="dot dot-g"></div>
+        </div>
+        <span class="cm">// your mission</span><br>
+        <span class="kw">function</span> <span class="fn">buildSomethingReal</span>(<span class="var">theme</span>) {<br>
+        &nbsp;&nbsp;<span class="kw">const</span> <span class="var">friction</span> = <span class="var">theme</span>.<span class="fn">interpret</span>();<br>
+        &nbsp;&nbsp;<span class="kw">const</span> <span class="var">position</span> = <span class="fn">takeAStance</span>(<span class="var">friction</span>);<br>
+        &nbsp;&nbsp;<span class="kw">return</span> <span class="fn">ship</span>(<span class="var">position</span>); <span class="cm">// just build it</span><br>
+        }
+    </div>
+</section>
+
+<!-- Key Info -->
+<div class="divider"></div>
+<section class="fade-in">
+    <div class="section-label"><span class="comment-sym">//</span> <span class="tag">config</span></div>
+    <h2>The <span class="highlight">parameters.</span></h2>
+    <div class="info-grid">
+        <div class="info-card">
+            <div class="accent-bar"></div>
+            <div class="number">14</div>
+            <div class="label">days</div>
+            <div class="desc">Two full weeks to research, prototype, build, and present.</div>
+        </div>
+        <div class="info-card">
+            <div class="accent-bar"></div>
+            <div class="number">1&ndash;4</div>
+            <div class="label">per team</div>
+            <div class="desc">Go solo or build a team of up to 4 people. Your call.</div>
+        </div>
+        <div class="info-card">
+            <div class="accent-bar"></div>
+            <div class="number">&#2547;1K</div>
+            <div class="label">entry fee</div>
+            <div class="desc">1,000 BDT per team. One payment, regardless of size.</div>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works -->
+<div class="divider"></div>
+<section id="how" class="fade-in">
+    <div class="section-label"><span class="comment-sym">//</span> <span class="tag">how_it_works</span></div>
+    <h2>The <span class="highlight">pipeline.</span></h2>
+    <div class="pipeline">
+        <div class="pipe-step">
+            <div class="pipe-step-num">Phase 01</div>
+            <div class="pipe-step-icon">&#128221;</div>
+            <h3>Register</h3>
+            <p>Sign up your team, pay the entry fee, and submit a 2-min video per member showcasing your coding journey and what you've built.</p>
+        </div>
+        <div class="pipe-arrow">&rarr;</div>
+        <div class="pipe-step">
+            <div class="pipe-step-num">Phase 02</div>
+            <div class="pipe-step-icon">&#128272;</div>
+            <h3>Get Your Battle Pass</h3>
+            <p>We vet every application. If approved, your team receives a unique <strong>Battle Pass code</strong> &mdash; your key to the final submission.</p>
+            <div class="battle-pass-badge">&#9889; BATTLE PASS: XXXX-XXXX</div>
+        </div>
+        <div class="pipe-arrow">&rarr;</div>
+        <div class="pipe-step">
+            <div class="pipe-step-num">Phase 03</div>
+            <div class="pipe-step-icon">&#128640;</div>
+            <h3>Build &amp; Submit</h3>
+            <p>Build for 2 weeks. Submit your hosted project link + a 2-min demo video, authenticated with your Battle Pass code.</p>
+        </div>
+    </div>
+</section>
+
+<!-- Prizes -->
+<div class="divider"></div>
+<section class="fade-in">
+    <div class="section-label"><span class="comment-sym">//</span> <span class="tag">prizes</span></div>
+    <h2>What's at <span class="highlight">stake.</span></h2>
+    <div class="prizes">
+        <div class="prize-card first">
+            <div class="prize-badge">1st place</div>
+            <div class="prize-icon">&#9733;</div>
+            <div class="prize-amount">&#2547;50,000</div>
+            <div class="prize-currency">BDT</div>
+        </div>
+        <div class="prize-card second">
+            <div class="prize-badge">2nd place</div>
+            <div class="prize-icon">&#9733;</div>
+            <div class="prize-amount">&#2547;30,000</div>
+            <div class="prize-currency">BDT</div>
+        </div>
+        <div class="prize-card third">
+            <div class="prize-badge">3rd place</div>
+            <div class="prize-icon">&#9733;</div>
+            <div class="prize-amount">&#2547;20,000</div>
+            <div class="prize-currency">BDT</div>
+        </div>
+    </div>
+</section>
+
+<!-- What We Need -->
+<div class="divider"></div>
+<section class="fade-in">
+    <div class="section-label"><span class="comment-sym">//</span> <span class="tag">requirements</span></div>
+    <h2>What we <span class="highlight">need</span> from you.</h2>
+    <ul class="req-list">
+        <li>
+            <span class="req-num">01</span>
+            <div class="req-content">
+                <h3>2-Min Coding Journey Video (per person)</h3>
+                <p>Each team member records a 2-minute video walking through their coding journey &mdash; what they've built, what they're passionate about. Show us your work.</p>
+            </div>
+        </li>
+        <li>
+            <span class="req-num">02</span>
+            <div class="req-content">
+                <h3>Team Project Pitch</h3>
+                <p>Tell us what you're planning to build as a team and how it connects to Friction. This doesn't lock you in &mdash; but we want to see your thinking.</p>
+            </div>
+        </li>
+        <li>
+            <span class="req-num">03</span>
+            <div class="req-content">
+                <h3>Entry Fee &mdash; &#2547;1,000 BDT</h3>
+                <p>One payment per team regardless of size. Payment details will be shared after form submission.</p>
+            </div>
+        </li>
+    </ul>
+</section>
+
+<!-- Registration + Final Submission Forms -->
+<div class="divider"></div>
+<section id="register" style="padding-bottom: 6rem;">
+    <div class="section-label fade-in"><span class="comment-sym">//</span> <span class="tag">forms</span></div>
+
+    <div class="form-section fade-in">
+        <div class="corner-tl"></div>
+        <div class="corner-br"></div>
+
+        <!-- Tabs -->
+        <div class="form-tabs">
+            <button class="form-tab active" onclick="switchTab('register-panel', this)">Register</button>
+            <button class="form-tab" onclick="switchTab('submit-panel', this)">Final Submission</button>
+        </div>
+
+        <!-- REGISTER PANEL -->
+        <div id="register-panel" class="form-panel active">
+            <h2>Apply to <span class="highlight">compete.</span></h2>
+            <p class="sub">Register your team. Video links should be unlisted YouTube or Google Drive.</p>
+
+            <form id="registrationForm" onsubmit="handleRegister(event)">
+                <div class="form-group">
+                    <label>team_name <span class="req">*</span></label>
+                    <input type="text" placeholder="Something memorable..." required>
+                </div>
+
+                <div class="form-group">
+                    <label>project_description <span class="req">*</span></label>
+                    <textarea placeholder="What are you building? How does it connect to Friction?..." required></textarea>
+                </div>
+
+                <div id="membersContainer">
+                    <div class="member-block">
+                        <div class="member-accent"></div>
+                        <h4>team[0] &mdash; Lead</h4>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>name <span class="req">*</span></label>
+                                <input type="text" placeholder="Your name" required>
+                            </div>
+                            <div class="form-group">
+                                <label>email <span class="req">*</span></label>
+                                <input type="email" placeholder="you@email.com" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>phone <span class="req">*</span></label>
+                                <input type="tel" placeholder="+880..." required>
+                            </div>
+                            <div class="form-group">
+                                <label>role</label>
+                                <input type="text" placeholder="e.g. full-stack, design, ml...">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>coding_journey_video (2 min) <span class="req">*</span></label>
+                            <input type="url" placeholder="https://..." required>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="button" class="add-member-btn" onclick="addMember()">+ add team member</button>
+
+                <div class="entry-fee-note">
+                    entry_fee: <span>&#2547;1,000 BDT</span> per team &mdash; payment info sent after submission
+                </div>
+
+                <br>
+                <button type="submit" class="submit-btn">submit(application) &rarr;</button>
+            </form>
+        </div>
+
+        <!-- FINAL SUBMISSION PANEL -->
+        <div id="submit-panel" class="form-panel">
+            <h2>Final <span class="highlight">submission.</span></h2>
+            <p class="sub">Got your Battle Pass? Submit your finished project here.</p>
+
+            <div class="bp-info">
+                <h4>&#9889; Battle Pass Required</h4>
+                <p>You need a valid Battle Pass code to submit. You'll receive one via email after your team application is vetted and approved.</p>
+            </div>
+
+            <form id="submissionForm" onsubmit="handleSubmit(event)">
+                <div class="form-group">
+                    <label>battle_pass_code <span class="req">*</span></label>
+                    <input type="text" class="battlepass-input" placeholder="XXXX-XXXX" maxlength="9" required>
+                </div>
+
+                <div class="form-group">
+                    <label>team_name <span class="req">*</span></label>
+                    <input type="text" placeholder="Your registered team name" required>
+                </div>
+
+                <div class="form-group">
+                    <label>hosted_project_url <span class="req">*</span></label>
+                    <input type="url" placeholder="https://your-project.vercel.app" required>
+                </div>
+
+                <div class="form-group">
+                    <label>source_code_url</label>
+                    <input type="url" placeholder="https://github.com/...">
+                </div>
+
+                <div class="form-group">
+                    <label>demo_video_url (2 min) <span class="req">*</span></label>
+                    <input type="url" placeholder="https://... (show what you built)" required>
+                </div>
+
+                <div class="form-group">
+                    <label>anything_else_to_say?</label>
+                    <textarea placeholder="Final notes, context, or anything we should know..."></textarea>
+                </div>
+
+                <button type="submit" class="submit-btn green-btn">deploy(project) &rarr;</button>
+            </form>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <div class="footer-line">
+        &lt;<span class="tag">friction</span> <span class="attr">year</span>="2026" /&gt;
+    </div>
+</footer>
+
+<script>
+    let memberCount = 1;
+
+    function addMember() {
+        if (memberCount >= 4) {
+            alert('Max team size: 4 members');
+            return;
+        }
+        memberCount++;
+        const container = document.getElementById('membersContainer');
+        const block = document.createElement('div');
+        block.className = 'member-block';
+        block.id = `member-${memberCount}`;
+        block.innerHTML = `
+            <div class="member-accent"></div>
+            <h4>team[${memberCount - 1}] <button type="button" class="remove-member-btn" onclick="removeMember('member-${memberCount}')">remove()</button></h4>
+            <div style="clear:both"></div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>name <span class="req">*</span></label>
+                    <input type="text" placeholder="Name" required>
+                </div>
+                <div class="form-group">
+                    <label>email <span class="req">*</span></label>
+                    <input type="email" placeholder="email@example.com" required>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>phone</label>
+                    <input type="tel" placeholder="+880...">
+                </div>
+                <div class="form-group">
+                    <label>role</label>
+                    <input type="text" placeholder="e.g. backend, design...">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>coding_journey_video (2 min) <span class="req">*</span></label>
+                <input type="url" placeholder="https://..." required>
+            </div>
+        `;
+        container.appendChild(block);
+    }
+
+    function removeMember(id) {
+        document.getElementById(id).remove();
+        memberCount--;
+    }
+
+    function switchTab(panelId, btn) {
+        document.querySelectorAll('.form-panel').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.form-tab').forEach(t => {
+            t.classList.remove('active');
+            t.classList.remove('active-green');
+        });
+        document.getElementById(panelId).classList.add('active');
+
+        if (panelId === 'submit-panel') {
+            btn.classList.add('active-green');
+        } else {
+            btn.classList.add('active');
+        }
+    }
+
+    function handleRegister(e) {
+        e.preventDefault();
+        alert('Application submitted!\n\nYou\'ll receive payment details via email. Once payment is confirmed and your application is vetted, we\'ll send your Battle Pass code.');
+    }
+
+    function handleSubmit(e) {
+        e.preventDefault();
+        const code = e.target.querySelector('.battlepass-input').value.trim();
+        if (code.length < 4) {
+            alert('Please enter a valid Battle Pass code.');
+            return;
+        }
+        alert('Project submitted!\n\nYour submission has been received. Good luck!');
+    }
+
+    // Scroll animations
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+    // Generate confetti particles
+    const confettiContainer = document.getElementById('confetti');
+    const colors = ['#f5c542', '#e8395b', '#2dd4bf', '#d946ef', '#f97316', '#3b82f6', '#22c55e'];
+
+    for (let i = 0; i < 50; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'confetti';
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        const size = 3 + Math.random() * 6;
+        const shapes = ['50%', '2px', '0'];
+        const radius = shapes[Math.floor(Math.random() * shapes.length)];
+
+        particle.style.cssText = `
+            left: ${Math.random() * 100}%;
+            width: ${size}px;
+            height: ${size}px;
+            background: ${color};
+            border-radius: ${radius};
+            animation-duration: ${8 + Math.random() * 12}s;
+            animation-delay: ${Math.random() * 15}s;
+        `;
+        confettiContainer.appendChild(particle);
+    }
+
+    // Animate hero letters on load
+    document.querySelectorAll('.hero h1 .letter').forEach((letter, i) => {
+        letter.style.opacity = '0';
+        letter.style.transform = 'translateY(40px) rotate(-5deg)';
+        letter.style.transition = `all 0.6s cubic-bezier(0.16, 1, 0.3, 1) ${i * 0.07}s`;
+        setTimeout(() => {
+            letter.style.opacity = '1';
+            letter.style.transform = 'translateY(0) rotate(0deg)';
+        }, 100);
+    });
+</script>
+
+</body>
+</html>
