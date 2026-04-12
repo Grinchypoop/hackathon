@@ -266,6 +266,76 @@
 
         .theme-quote strong { color: var(--yellow); font-weight: 600; }
 
+        /* Theme reveal blur */
+        .theme-hidden-wrapper {
+            position: relative;
+        }
+
+        .theme-hidden-wrapper .theme-blurred {
+            filter: blur(8px);
+            user-select: none;
+            pointer-events: none;
+            opacity: 0.5;
+        }
+
+        .theme-reveal-overlay {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            gap: 1rem;
+        }
+
+        .theme-reveal-overlay .lock-icon {
+            font-size: 2.5rem;
+            opacity: 0.8;
+        }
+
+        .theme-reveal-overlay .reveal-text {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: clamp(1rem, 3vw, 1.4rem);
+            font-weight: 600;
+            color: var(--yellow);
+            text-align: center;
+            letter-spacing: 0.05em;
+        }
+
+        .theme-reveal-overlay .reveal-sub {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--muted);
+            text-align: center;
+        }
+
+        .theme-reveal-countdown {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .theme-reveal-countdown .rc-unit {
+            text-align: center;
+        }
+
+        .theme-reveal-countdown .rc-num {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--yellow);
+            display: block;
+        }
+
+        .theme-reveal-countdown .rc-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
         /* Code block */
         .code-block {
             background: var(--surface);
@@ -858,6 +928,55 @@
         }
 
         /* Footer */
+        /* Sponsors */
+        .sponsors {
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+
+        .sponsors .sponsors-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            margin-bottom: 2.5rem;
+        }
+
+        .sponsors-grid {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .sponsor-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0.7;
+            transition: opacity 0.3s;
+        }
+
+        .sponsor-item:hover {
+            opacity: 1;
+        }
+
+        .sponsor-item img {
+            height: 50px;
+            width: auto;
+            object-fit: contain;
+            border-radius: 6px;
+        }
+
+        .sponsor-name {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--muted);
+            font-weight: 500;
+        }
+
         footer {
             text-align: center;
             padding: 3rem 2rem;
@@ -954,7 +1073,7 @@
             <span class="countdown-label">secs</span>
         </div>
     </div>
-    <div class="countdown-sub">// launches April 13 &mdash; submissions due April 27</div>
+    <div class="countdown-sub">// registrations open April 13 &mdash; topic reveal &amp; building starts April 23</div>
 
     <a href="#register" class="cta">git commit -m "register" &rarr;</a>
     <div class="scroll-hint">&darr; scroll()</div>
@@ -965,27 +1084,44 @@
 <section id="theme" class="fade-in">
     <div class="section-label"><span class="comment-sym">//</span> <span class="tag">theme</span></div>
     <h2>One word.<br><span class="highlight">Infinite interpretations.</span></h2>
-    <div class="theme-quote">
-        Something slows everything down. We've spent decades trying to remove it &mdash; faster payments, smoother interfaces, instant everything.<br><br>
-        But maybe we got that wrong.<br><br>
-        Your job is not to remove friction. Your job is to <strong>understand</strong> it. Build something that takes a position.
-    </div>
-    <p class="body-text" style="margin-top: 1.5rem;">
-        We don't care what you build. We care <em>why</em>. Interpret the theme however you want &mdash; social friction, mechanical friction, cognitive friction, creative friction. Take a stance. Ship it.
-    </p>
 
-    <div class="code-block">
-        <div class="dots">
-            <div class="dot dot-r"></div>
-            <div class="dot dot-y"></div>
-            <div class="dot dot-g"></div>
+    <div class="theme-hidden-wrapper">
+        <div class="theme-reveal-overlay">
+            <div class="lock-icon">&#128274;</div>
+            <div class="reveal-text">// topic.reveal()</div>
+            <div class="theme-reveal-countdown" id="themeCountdown">
+                <div class="rc-unit"><span class="rc-num" id="rc-days">--</span><span class="rc-label">days</span></div>
+                <div class="rc-unit"><span class="rc-num" id="rc-hours">--</span><span class="rc-label">hrs</span></div>
+                <div class="rc-unit"><span class="rc-num" id="rc-mins">--</span><span class="rc-label">min</span></div>
+                <div class="rc-unit"><span class="rc-num" id="rc-secs">--</span><span class="rc-label">sec</span></div>
+            </div>
+            <div class="reveal-sub">Theme drops April 23 &mdash; last day to register: April 23, 23:59</div>
         </div>
-        <span class="cm">// your mission</span><br>
-        <span class="kw">function</span> <span class="fn">buildSomethingReal</span>(<span class="var">theme</span>) {<br>
-        &nbsp;&nbsp;<span class="kw">const</span> <span class="var">friction</span> = <span class="var">theme</span>.<span class="fn">interpret</span>();<br>
-        &nbsp;&nbsp;<span class="kw">const</span> <span class="var">position</span> = <span class="fn">takeAStance</span>(<span class="var">friction</span>);<br>
-        &nbsp;&nbsp;<span class="kw">return</span> <span class="fn">ship</span>(<span class="var">position</span>); <span class="cm">// just build it</span><br>
-        }
+
+        <div class="theme-blurred">
+            <div class="theme-quote">
+                Something slows everything down. We've spent decades trying to remove it &mdash; faster payments, smoother interfaces, instant everything.<br><br>
+                But maybe we got that wrong.<br><br>
+                Your job is not to remove friction. Your job is to <strong>understand</strong> it. Build something that takes a position.
+            </div>
+            <p class="body-text" style="margin-top: 1.5rem;">
+                We don't care what you build. We care <em>why</em>. Interpret the theme however you want &mdash; social friction, mechanical friction, cognitive friction, creative friction. Take a stance. Ship it.
+            </p>
+
+            <div class="code-block">
+                <div class="dots">
+                    <div class="dot dot-r"></div>
+                    <div class="dot dot-y"></div>
+                    <div class="dot dot-g"></div>
+                </div>
+                <span class="cm">// your mission</span><br>
+                <span class="kw">function</span> <span class="fn">buildSomethingReal</span>(<span class="var">theme</span>) {<br>
+                &nbsp;&nbsp;<span class="kw">const</span> <span class="var">friction</span> = <span class="var">theme</span>.<span class="fn">interpret</span>();<br>
+                &nbsp;&nbsp;<span class="kw">const</span> <span class="var">position</span> = <span class="fn">takeAStance</span>(<span class="var">friction</span>);<br>
+                &nbsp;&nbsp;<span class="kw">return</span> <span class="fn">ship</span>(<span class="var">position</span>); <span class="cm">// just build it</span><br>
+                }
+            </div>
+        </div>
     </div>
 </section>
 
@@ -997,9 +1133,9 @@
     <div class="info-grid">
         <div class="info-card">
             <div class="accent-bar"></div>
-            <div class="number">14</div>
-            <div class="label">days</div>
-            <div class="desc">Two full weeks to research, prototype, build, and present.</div>
+            <div class="number">72</div>
+            <div class="label">hours</div>
+            <div class="desc">72 hours to ideate, prototype, build, and present.</div>
         </div>
         <div class="info-card">
             <div class="accent-bar"></div>
@@ -1009,42 +1145,13 @@
         </div>
         <div class="info-card">
             <div class="accent-bar"></div>
-            <div class="number">&#2547;1K</div>
+            <div class="number">&#2547;500</div>
             <div class="label">entry fee</div>
-            <div class="desc">1,000 BDT per team. One payment, regardless of size.</div>
+            <div class="desc">500 BDT per team. One payment, regardless of size.</div>
         </div>
     </div>
 </section>
 
-<!-- How It Works -->
-<div class="divider"></div>
-<section id="how" class="fade-in">
-    <div class="section-label"><span class="comment-sym">//</span> <span class="tag">how_it_works</span></div>
-    <h2>The <span class="highlight">pipeline.</span></h2>
-    <div class="pipeline">
-        <div class="pipe-step">
-            <div class="pipe-step-num">Phase 01</div>
-            <div class="pipe-step-icon">&#128221;</div>
-            <h3>Register</h3>
-            <p>Sign up your team, pay the entry fee, and submit a 2-min video per member showcasing your coding journey and what you've built.</p>
-        </div>
-        <div class="pipe-arrow">&rarr;</div>
-        <div class="pipe-step">
-            <div class="pipe-step-num">Phase 02</div>
-            <div class="pipe-step-icon">&#128272;</div>
-            <h3>Get Your Battle Pass</h3>
-            <p>We vet every application. If approved, your team receives a unique <strong>Battle Pass code</strong> &mdash; your key to the final submission.</p>
-            <div class="battle-pass-badge">&#9889; BATTLE PASS: XXXX-XXXX</div>
-        </div>
-        <div class="pipe-arrow">&rarr;</div>
-        <div class="pipe-step">
-            <div class="pipe-step-num">Phase 03</div>
-            <div class="pipe-step-icon">&#128640;</div>
-            <h3>Build &amp; Submit</h3>
-            <p>Build for 2 weeks. Submit your hosted project link + a 2-min demo video, authenticated with your Battle Pass code.</p>
-        </div>
-    </div>
-</section>
 
 <!-- Prizes -->
 <div class="divider"></div>
@@ -1077,26 +1184,19 @@
 <div class="divider"></div>
 <section class="fade-in">
     <div class="section-label"><span class="comment-sym">//</span> <span class="tag">requirements</span></div>
-    <h2>What we <span class="highlight">need</span> from you.</h2>
+    <h2>What we <span class="highlight">need</span> to register.</h2>
     <ul class="req-list">
         <li>
             <span class="req-num">01</span>
             <div class="req-content">
-                <h3>2-Min Coding Journey Video (per person)</h3>
-                <p>Each team member records a 2-minute video walking through their coding journey &mdash; what they've built, what they're passionate about. Show us your work.</p>
+                <h3>2-Min Video Resume (per person)</h3>
+                <p>Each team member films a 2-minute video about their journey so far. Coder, non-coder, vibe-coder &mdash; doesn't matter. Show us who you are, what you've done, and why you're here.</p>
             </div>
         </li>
         <li>
             <span class="req-num">02</span>
             <div class="req-content">
-                <h3>Team Project Pitch</h3>
-                <p>Tell us what you're planning to build as a team and how it connects to Friction. This doesn't lock you in &mdash; but we want to see your thinking.</p>
-            </div>
-        </li>
-        <li>
-            <span class="req-num">03</span>
-            <div class="req-content">
-                <h3>Entry Fee &mdash; &#2547;1,000 BDT</h3>
+                <h3>Entry Fee &mdash; &#2547;500 BDT</h3>
                 <p>One payment per team regardless of size. Payment details will be shared after form submission.</p>
             </div>
         </li>
@@ -1130,8 +1230,8 @@
                 </div>
 
                 <div class="form-group">
-                    <label>project_description <span class="req">*</span></label>
-                    <textarea placeholder="What are you building? How does it connect to Friction?..." required></textarea>
+                    <label>team_description <span class="req">*</span></label>
+                    <textarea placeholder="Why did you guys sign up together? Tell us about your team..." required></textarea>
                 </div>
 
                 <div id="membersContainer">
@@ -1150,17 +1250,13 @@
                         </div>
                         <div class="form-row">
                             <div class="form-group">
-                                <label>phone <span class="req">*</span></label>
-                                <input type="tel" placeholder="+880..." required>
+                                <label>university <span class="req">*</span></label>
+                                <input type="text" placeholder="e.g. BUET, DU, NSU..." required>
                             </div>
                             <div class="form-group">
-                                <label>role</label>
-                                <input type="text" placeholder="e.g. full-stack, design, ml...">
+                                <label>age <span class="req">*</span></label>
+                                <input type="number" placeholder="e.g. 20" min="13" max="99" required>
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <label>coding_journey_video (2 min) <span class="req">*</span></label>
-                            <input type="url" placeholder="https://..." required>
                         </div>
                     </div>
                 </div>
@@ -1168,7 +1264,7 @@
                 <button type="button" class="add-member-btn" onclick="addMember()">+ add team member</button>
 
                 <div class="entry-fee-note">
-                    entry_fee: <span>&#2547;1,000 BDT</span> per team &mdash; payment info sent after submission
+                    entry_fee: <span>&#2547;500 BDT</span> per team &mdash; payment info sent after submission
                 </div>
 
                 <br>
@@ -1223,6 +1319,26 @@
     </div>
 </section>
 
+<!-- Sponsors -->
+<div class="divider"></div>
+<section class="sponsors fade-in">
+    <div class="sponsors-label">// brought to you by</div>
+    <div class="sponsors-grid">
+        <div class="sponsor-item">
+            <img src="logos/noverse.png" alt="Noverse Inc">
+        </div>
+        <div class="sponsor-item">
+            <span class="sponsor-name">BugBoom</span>
+        </div>
+        <div class="sponsor-item">
+            <img src="logos/lint.png" alt="Lint Technologies">
+        </div>
+        <div class="sponsor-item">
+            <img src="logos/stackplus.png" alt="Stack+">
+        </div>
+    </div>
+</section>
+
 <footer>
     <div class="footer-line">
         &lt;<span class="tag">friction</span> <span class="attr">year</span>="2026" /&gt;
@@ -1258,17 +1374,13 @@
             </div>
             <div class="form-row">
                 <div class="form-group">
-                    <label>phone</label>
-                    <input type="tel" placeholder="+880...">
+                    <label>university <span class="req">*</span></label>
+                    <input type="text" placeholder="e.g. BUET, DU, NSU..." required>
                 </div>
                 <div class="form-group">
-                    <label>role</label>
-                    <input type="text" placeholder="e.g. backend, design...">
+                    <label>age <span class="req">*</span></label>
+                    <input type="number" placeholder="e.g. 20" min="13" max="99" required>
                 </div>
-            </div>
-            <div class="form-group">
-                <label>coding_journey_video (2 min) <span class="req">*</span></label>
-                <input type="url" placeholder="https://..." required>
             </div>
         `;
         container.appendChild(block);
@@ -1356,7 +1468,7 @@
             document.getElementById('cd-hours').textContent = '00';
             document.getElementById('cd-mins').textContent = '00';
             document.getElementById('cd-secs').textContent = '00';
-            document.querySelector('.countdown-sub').textContent = '// LIVE NOW — submissions due April 27';
+            document.querySelector('.countdown-sub').textContent = '// LIVE NOW — topic reveal & building starts April 23';
             return;
         }
 
@@ -1373,6 +1485,38 @@
 
     updateCountdown();
     setInterval(updateCountdown, 1000);
+
+    // Theme reveal countdown — April 23, 2026 midnight BST (UTC+6)
+    const themeRevealDate = new Date('2026-04-23T00:00:00+06:00').getTime();
+
+    function updateThemeCountdown() {
+        const now = Date.now();
+        const diff = themeRevealDate - now;
+
+        if (diff <= 0) {
+            // Theme is live — remove blur and overlay from all hidden sections
+            document.querySelectorAll('.theme-hidden-wrapper').forEach(wrapper => {
+                const overlay = wrapper.querySelector('.theme-reveal-overlay');
+                const blurred = wrapper.querySelector('.theme-blurred');
+                if (overlay) overlay.remove();
+                if (blurred) blurred.classList.remove('theme-blurred');
+            });
+            return;
+        }
+
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const secs = Math.floor((diff % (1000 * 60)) / 1000);
+
+        document.getElementById('rc-days').textContent = String(days).padStart(2, '0');
+        document.getElementById('rc-hours').textContent = String(hours).padStart(2, '0');
+        document.getElementById('rc-mins').textContent = String(mins).padStart(2, '0');
+        document.getElementById('rc-secs').textContent = String(secs).padStart(2, '0');
+    }
+
+    updateThemeCountdown();
+    setInterval(updateThemeCountdown, 1000);
 
     // Animate hero letters on load
     document.querySelectorAll('.hero h1 .letter').forEach((letter, i) => {
