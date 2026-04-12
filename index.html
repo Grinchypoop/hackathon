@@ -813,13 +813,36 @@
 
         .modal-card {
             background: var(--surface);
-            border: 1px solid var(--border);
+            border: 2px solid var(--pink);
             border-radius: 12px;
             max-width: 520px;
             width: 100%;
             max-height: 85vh;
             overflow-y: auto;
             padding: 2rem;
+            position: relative;
+            animation: pulseBorder 2s ease-in-out infinite;
+        }
+
+        @keyframes pulseBorder {
+            0%, 100% { box-shadow: 0 0 8px rgba(232, 57, 91, 0.3); }
+            50% { box-shadow: 0 0 20px rgba(232, 57, 91, 0.6), 0 0 40px rgba(232, 57, 91, 0.2); }
+        }
+
+        .modal-important-tag {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--pink);
+            color: #fff;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 4px 16px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
         }
 
         .modal-card h3 {
@@ -1441,10 +1464,11 @@
 <!-- Payment Warning Modal -->
 <div class="modal-overlay" id="paymentModal">
     <div class="modal-card">
+        <div class="modal-important-tag">Important</div>
         <h3>// before you register</h3>
 
         <p style="color: var(--muted); font-size: 0.85rem; margin-bottom: 1.5rem;">
-            Please read carefully. You'll need to follow these steps to complete your registration after submitting.
+            Please read carefully. You'll need to follow these steps to complete your registration after submitting. A confirmation email with all payment details will be sent to the <strong style="color: var(--cyan);">team lead's email</strong>.
         </p>
 
         <div class="modal-step">
