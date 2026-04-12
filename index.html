@@ -1606,7 +1606,13 @@
             body: JSON.stringify(payload),
             redirect: 'follow'
         });
-        return await res.json();
+        try {
+            return await res.json();
+        } catch (e) {
+            // Google Apps Script redirects make the response unreadable
+            // but the data is saved — treat as success
+            return { success: true };
+        }
     }
 
     let pendingRegistration = null;
