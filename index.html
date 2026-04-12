@@ -1181,6 +1181,7 @@
     <div class="nav-links">
         <a href="#register" onclick="setTimeout(()=>switchTab('register-panel',document.querySelectorAll('.form-tab')[0]),100)">register</a>
         <a href="#register" onclick="setTimeout(()=>switchTab('submit-panel',document.querySelectorAll('.form-tab')[1]),100)">submit</a>
+        <a href="instructions.html">how it works</a>
         <a href="team.html">team</a>
     </div>
 </nav>
@@ -1332,12 +1333,19 @@
         <li>
             <span class="req-num">01</span>
             <div class="req-content">
+                <h3>Team Member Details</h3>
+                <p>Name, email, university, and age for each team member. The team lead's email will receive all communications including payment instructions and Battle Pass codes.</p>
+            </div>
+        </li>
+        <li>
+            <span class="req-num">02</span>
+            <div class="req-content">
                 <h3>2-Min Video Resume (per person)</h3>
                 <p>Each team member films a 2-minute video about their journey so far. Coder, non-coder, vibe-coder &mdash; doesn't matter. Show us who you are, what you've done, and why you're here.</p>
             </div>
         </li>
         <li>
-            <span class="req-num">02</span>
+            <span class="req-num">03</span>
             <div class="req-content">
                 <h3>Entry Fee &mdash; &#2547;500 BDT</h3>
                 <p>One payment per team regardless of size. Payment details will be shared after form submission.</p>
@@ -1767,7 +1775,7 @@
             document.getElementById('cd-hours').textContent = '00';
             document.getElementById('cd-mins').textContent = '00';
             document.getElementById('cd-secs').textContent = '00';
-            document.querySelector('.countdown-sub').textContent = '// REGISTRATIONS CLOSED — topic reveal April 23, 12:00 AM (BST)';
+            document.querySelector('.countdown-sub').textContent = '// REGISTRATIONS OPEN — closes April 22, 11:59 PM (BST)';
             return;
         }
 

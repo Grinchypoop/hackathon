@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FRICTION — How It Works</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #000000;
+            --surface: #0a0a0a;
+            --surface-2: #111111;
+            --border: #1a1a1a;
+            --text: #e8edf2;
+            --muted: #6b8299;
+            --yellow: #f5c542;
+            --pink: #e8395b;
+            --cyan: #2dd4bf;
+            --green: #22c55e;
+            --comment: #546e7a;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        nav .logo {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        nav .logo a { text-decoration: none; color: inherit; }
+        nav .logo .sym { color: var(--pink); }
+        nav .logo .fn { color: var(--yellow); }
+        nav .logo .paren { color: var(--cyan); }
+
+        nav .nav-links a {
+            color: var(--muted);
+            text-decoration: none;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            transition: color 0.3s;
+            margin-left: 2rem;
+        }
+
+        nav .nav-links a:hover { color: var(--yellow); }
+
+        .page-content {
+            max-width: 750px;
+            margin: 0 auto;
+            padding: 7rem 2rem 4rem;
+        }
+
+        .section-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--comment);
+            margin-bottom: 1rem;
+        }
+
+        .section-label .comment-sym { color: var(--muted); }
+        .section-label .tag { color: var(--cyan); }
+
+        h2 {
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 0.5rem;
+        }
+
+        .highlight { color: var(--yellow); }
+
+        .phase {
+            margin: 2.5rem 0;
+            position: relative;
+            padding-left: 2.5rem;
+        }
+
+        .phase::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--border);
+        }
+
+        .phase-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .phase-num {
+            background: var(--yellow);
+            color: #000;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            font-size: 0.7rem;
+            padding: 4px 12px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            position: relative;
+            left: -1.35rem;
+        }
+
+        .phase-num.pink { background: var(--pink); color: #fff; }
+        .phase-num.cyan { background: var(--cyan); color: #000; }
+        .phase-num.green { background: var(--green); color: #000; }
+
+        .phase h3 {
+            font-size: 1.2rem;
+            color: var(--text);
+            margin-bottom: 0.8rem;
+        }
+
+        .phase p {
+            color: var(--muted);
+            font-size: 0.9rem;
+            line-height: 1.7;
+            margin-bottom: 0.8rem;
+        }
+
+        .phase strong { color: var(--text); }
+        .phase .hl { color: var(--yellow); font-weight: 600; }
+        .phase .warn { color: var(--pink); font-weight: 600; }
+
+        .info-box {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.2rem 1.5rem;
+            margin: 1rem 0;
+            font-size: 0.85rem;
+            line-height: 1.6;
+        }
+
+        .info-box.warning {
+            border-color: var(--pink);
+            border-left: 3px solid var(--pink);
+        }
+
+        .info-box.tip {
+            border-color: var(--cyan);
+            border-left: 3px solid var(--cyan);
+        }
+
+        .divider {
+            width: 60px;
+            height: 2px;
+            background: var(--border);
+            margin: 3rem auto;
+        }
+
+        .timeline-dates {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .timeline-dates h3 {
+            color: var(--yellow);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .date-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.6rem 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.85rem;
+        }
+
+        .date-row:last-child { border-bottom: none; }
+        .date-row .date-label { color: var(--muted); }
+        .date-row .date-value { color: var(--text); font-weight: 600; }
+
+        .help-section {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        .help-section h3 {
+            color: var(--text);
+            margin-bottom: 1rem;
+        }
+
+        .help-section p {
+            color: var(--muted);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .help-section a {
+            color: var(--cyan);
+            text-decoration: none;
+        }
+
+        .help-section a:hover { text-decoration: underline; }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 2rem;
+            color: var(--muted);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .back-link:hover { color: var(--yellow); }
+
+        footer {
+            text-align: center;
+            padding: 3rem 2rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--comment);
+            border-top: 1px solid var(--border);
+        }
+
+        footer .tag { color: var(--pink); }
+        footer .attr { color: var(--yellow); }
+
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s, transform 0.6s;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @media (max-width: 600px) {
+            .page-content { padding: 6rem 1.5rem 3rem; }
+            .date-row { flex-direction: column; gap: 0.2rem; }
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div class="logo"><a href="index.html"><span class="sym">$</span> <span class="fn">friction</span><span class="paren">()</span></a></div>
+    <div class="nav-links">
+        <a href="index.html">home</a>
+        <a href="index.html#register">register</a>
+    </div>
+</nav>
+
+<div class="page-content">
+
+    <section class="fade-in">
+        <div class="section-label"><span class="comment-sym">//</span> <span class="tag">instructions</span></div>
+        <h2>How <span class="highlight">Friction</span> works.</h2>
+        <p style="color: var(--muted); margin-top: 0.5rem;">Everything you need to know — from registration to final submission.</p>
+
+        <!-- Timeline -->
+        <div class="timeline-dates">
+            <h3>// key dates (BST — UTC+6)</h3>
+            <div class="date-row">
+                <span class="date-label">Registrations Open</span>
+                <span class="date-value">April 13, 2026</span>
+            </div>
+            <div class="date-row">
+                <span class="date-label">Registrations Close</span>
+                <span class="date-value" style="color: var(--pink);">April 22, 11:59 PM</span>
+            </div>
+            <div class="date-row">
+                <span class="date-label">Topic Reveal & Hackathon Start</span>
+                <span class="date-value" style="color: var(--yellow);">April 23, 12:00 AM</span>
+            </div>
+            <div class="date-row">
+                <span class="date-label">Final Submissions Due</span>
+                <span class="date-value" style="color: var(--pink);">April 26, 12:00 AM (72h)</span>
+            </div>
+        </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- Phase 1: Register -->
+    <section class="fade-in">
+        <div class="phase">
+            <div class="phase-header">
+                <span class="phase-num">Phase 1</span>
+            </div>
+            <h3>Register Your Team</h3>
+            <p>Head to the <a href="index.html#register" style="color: var(--cyan);">registration form</a> and fill in your team details:</p>
+            <p><strong>Team name</strong>, a short <strong>team description</strong>, and each member's <strong>name, email, university, and age</strong>.</p>
+            <p>The <span class="hl">team lead's email</span> (first member listed) will receive all communications — payment instructions, team code, and Battle Pass.</p>
+
+            <div class="info-box">
+                <strong>Video Resume:</strong> Each team member must film a <span class="hl">2-minute video</span> about their journey so far — what they've built, what they're passionate about. Coder, non-coder, vibe-coder — doesn't matter. This is how we get to know you.
+            </div>
+        </div>
+    </section>
+
+    <!-- Phase 2: Payment -->
+    <section class="fade-in">
+        <div class="phase">
+            <div class="phase-header">
+                <span class="phase-num pink">Phase 2</span>
+            </div>
+            <h3>Complete Payment</h3>
+            <p>After registering, the team lead will receive an email with a <span class="hl">Team Code</span> and payment instructions.</p>
+            <p>Pay <strong>&#2547;500 BDT</strong> per team via <strong>bKash</strong> or <strong>bank transfer</strong>. Details are in the email.</p>
+
+            <div class="info-box warning">
+                <strong style="color: var(--pink);">Critical:</strong> You <strong>must</strong> enter your Team Code in the <strong>reference field</strong> when making payment. Without it, we cannot verify your payment. <span class="warn">Payments without a valid reference are non-refundable.</span>
+            </div>
+
+            <p>After payment, <strong>take a screenshot</strong> and <strong>reply to the confirmation email</strong> from the same email address you registered with. We'll verify within <span class="hl">24 hours</span>.</p>
+        </div>
+    </section>
+
+    <!-- Phase 3: Battle Pass -->
+    <section class="fade-in">
+        <div class="phase">
+            <div class="phase-header">
+                <span class="phase-num cyan">Phase 3</span>
+            </div>
+            <h3>Receive Your Battle Pass</h3>
+            <p>Once payment is verified, the team lead will receive a <span class="hl">Battle Pass code</span> (format: XXXX-XXXX) via email.</p>
+            <p>This code is <strong>unique to your team</strong> and is required for your final submission.</p>
+
+            <div class="info-box warning">
+                <strong style="color: var(--pink);">Do not lose your Battle Pass.</strong> Each code is tied to your team name and can only be used <strong>once</strong> for submission. We cannot reissue codes. Keep it safe.
+            </div>
+        </div>
+    </section>
+
+    <!-- Phase 4: Build -->
+    <section class="fade-in">
+        <div class="phase">
+            <div class="phase-header">
+                <span class="phase-num green">Phase 4</span>
+            </div>
+            <h3>Build (72 Hours)</h3>
+            <p>On <span class="hl">April 23 at 12:00 AM (BST)</span>, the theme will be revealed and the clock starts.</p>
+            <p>You have exactly <strong>72 hours</strong> to ideate, prototype, build, and submit your project.</p>
+            <p>Interpret the theme however you want. We don't care what you build — we care <em>why</em>.</p>
+        </div>
+    </section>
+
+    <!-- Phase 5: Submit -->
+    <section class="fade-in">
+        <div class="phase">
+            <div class="phase-header">
+                <span class="phase-num">Phase 5</span>
+            </div>
+            <h3>Final Submission</h3>
+            <p>Go to the <a href="index.html#register" style="color: var(--cyan);">submission form</a> (Final Submission tab) and enter:</p>
+            <p><strong>Battle Pass code</strong> + <strong>team name</strong> (must match exactly) + <strong>hosted project URL</strong> + <strong>2-min demo video</strong> + optional source code link.</p>
+
+            <div class="info-box warning">
+                <strong style="color: var(--pink);">Deadline:</strong> All submissions must be in by <strong>April 26, 12:00 AM (BST)</strong> — exactly 72 hours after the hackathon starts. <span class="warn">Any entry after this time will be invalid.</span>
+            </div>
+
+            <div class="info-box tip">
+                <strong style="color: var(--cyan);">Tip:</strong> Your Battle Pass can only be used <strong>once</strong>. Make sure your project is ready before submitting. Double-check your team name matches your registration exactly.
+            </div>
+        </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- Help -->
+    <section class="fade-in">
+        <div class="help-section">
+            <h3>Need help?</h3>
+            <p>Email us at <a href="mailto:friction@noverseinc.com">friction@noverseinc.com</a></p>
+            <p>Or join our <a href="https://discord.gg/ArvTUXHy" target="_blank">Discord community</a> for updates and support</p>
+        </div>
+
+        <a href="index.html" class="back-link">&larr; back to friction()</a>
+    </section>
+
+</div>
+
+<footer>
+    &lt;<span class="tag">friction</span> <span class="attr">year</span>="2026" /&gt;
+</footer>
+
+<script>
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) entry.target.classList.add('visible');
+        });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
