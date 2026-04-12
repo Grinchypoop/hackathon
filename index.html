@@ -1215,7 +1215,7 @@
             <span class="countdown-label">secs</span>
         </div>
     </div>
-    <div class="countdown-sub">// registrations open April 13 &mdash; topic reveal &amp; building starts April 23</div>
+    <div class="countdown-sub">// registrations close April 22, 11:59 PM &mdash; topic reveal April 23, 12:00 AM (BST)</div>
 
     <a href="#register" class="cta">git commit -m "register" &rarr;</a>
     <div class="scroll-hint">&darr; scroll()</div>
@@ -1237,7 +1237,7 @@
                 <div class="rc-unit"><span class="rc-num" id="rc-mins">--</span><span class="rc-label">min</span></div>
                 <div class="rc-unit"><span class="rc-num" id="rc-secs">--</span><span class="rc-label">sec</span></div>
             </div>
-            <div class="reveal-sub">Theme drops April 23 &mdash; last day to register: April 23, 23:59</div>
+            <div class="reveal-sub">Theme drops April 23, 12:00 AM (BST) &mdash; registrations close April 22, 11:59 PM</div>
         </div>
 
         <div class="theme-blurred">
@@ -1277,7 +1277,7 @@
             <div class="accent-bar"></div>
             <div class="number">72</div>
             <div class="label">hours</div>
-            <div class="desc">72 hours to ideate, prototype, build, and present.</div>
+            <div class="desc">72 hours to ideate, prototype, build, and submit. Starts April 23, 12:00 AM. All entries after 72h are invalid.</div>
         </div>
         <div class="info-card">
             <div class="accent-bar"></div>
@@ -1327,6 +1327,7 @@
 <section class="fade-in">
     <div class="section-label"><span class="comment-sym">//</span> <span class="tag">requirements</span></div>
     <h2>What we <span class="highlight">need</span> to register.</h2>
+    <p class="body-text" style="margin-bottom: 1rem; color: var(--pink); font-family: 'JetBrains Mono', monospace; font-size: 0.8rem;">// registrations close April 22, 11:59 PM (BST)</p>
     <ul class="req-list">
         <li>
             <span class="req-num">01</span>
@@ -1425,6 +1426,11 @@
             <div class="bp-info">
                 <h4>&#9889; Battle Pass Required</h4>
                 <p>You need a valid Battle Pass code to submit. You'll receive one via email after your team application is vetted and approved.</p>
+            </div>
+
+            <div class="bp-info" style="border-color: var(--pink); margin-top: 0.5rem;">
+                <h4 style="color: var(--pink);">&#9200; Deadline</h4>
+                <p>Final submissions must be in within <strong>72 hours</strong> of the hackathon start (April 23, 12:00 AM BST). Any entry after <strong>April 26, 12:00 AM BST</strong> will be invalid.</p>
             </div>
 
             <form id="submissionForm" onsubmit="handleSubmit(event)">
@@ -1761,7 +1767,7 @@
             document.getElementById('cd-hours').textContent = '00';
             document.getElementById('cd-mins').textContent = '00';
             document.getElementById('cd-secs').textContent = '00';
-            document.querySelector('.countdown-sub').textContent = '// LIVE NOW — topic reveal & building starts April 23';
+            document.querySelector('.countdown-sub').textContent = '// REGISTRATIONS CLOSED — topic reveal April 23, 12:00 AM (BST)';
             return;
         }
 
