@@ -70,6 +70,21 @@ function doPost(e) {
 }
 
 function doGet(e) {
+  if (e.parameter && e.parameter.payload) {
+    try {
+      const data = JSON.parse(e.parameter.payload);
+
+      if (data.type === 'register') {
+        return handleRegistration(data);
+      } else if (data.type === 'submit') {
+        return handleSubmission(data);
+      }
+
+      return jsonResponse({ success: false, message: 'Unknown type' });
+    } catch (err) {
+      return jsonResponse({ success: false, message: err.toString() });
+    }
+  }
   return jsonResponse({ status: 'ok' });
 }
 

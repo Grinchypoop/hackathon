@@ -1599,38 +1599,10 @@
 
     const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzp0TDHgLTDveybePQUtpnJxvBvrPzG5dGYd2w3bq3f6ORgo3xgFkWvBmjXZNhFfwvn/exec';
 
-    function postToAppsScript(payload) {
-        return new Promise((resolve, reject) => {
-            const form = document.createElement('form');
-            const iframe = document.createElement('iframe');
-            const iframeName = 'gas_iframe_' + Date.now();
-
-            iframe.name = iframeName;
-            iframe.style.display = 'none';
-            document.body.appendChild(iframe);
-
-            form.method = 'POST';
-            form.action = APPS_SCRIPT_URL;
-            form.target = iframeName;
-            form.style.display = 'none';
-
-            // Add payload as form field
-            const input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = 'payload';
-            input.value = JSON.stringify(payload);
-            form.appendChild(input);
-
-            document.body.appendChild(form);
-            form.submit();
-
-            // Wait for response, then clean up
-            setTimeout(() => {
-                try { document.body.removeChild(form); } catch(e) {}
-                try { document.body.removeChild(iframe); } catch(e) {}
-                resolve({ success: true });
-            }, 4000);
-        });
+    async function postToAppsScript(payload) {
+        const url = APPS_SCRIPT_URL + '?payload=' + encodeURIComponent(JSON.stringify(payload));
+        const res = await fetch(url);
+        return await res.json();
     }
 
     let pendingRegistration = null;
