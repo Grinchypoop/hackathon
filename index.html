@@ -1216,7 +1216,7 @@
             <span class="countdown-label">secs</span>
         </div>
     </div>
-    <div class="countdown-sub">// registrations close April 22, 11:59 PM &mdash; topic reveal April 23, 12:00 AM (BST)</div>
+    <div class="countdown-sub">// topic reveal in...</div>
 
     <a href="#register" class="cta">git commit -m "register" &rarr;</a>
     <div class="scroll-hint">&darr; scroll()</div>
@@ -1763,8 +1763,8 @@
         confettiContainer.appendChild(particle);
     }
 
-    // Countdown timer — launches April 13, 2026 midnight BST (UTC+6)
-    const launchDate = new Date('2026-04-13T00:00:00+06:00').getTime();
+    // Countdown timer — topic reveal April 23, 2026 midnight BST (UTC+6)
+    const launchDate = new Date('2026-04-23T00:00:00+06:00').getTime();
 
     function updateCountdown() {
         const now = Date.now();
@@ -1775,7 +1775,7 @@
             document.getElementById('cd-hours').textContent = '00';
             document.getElementById('cd-mins').textContent = '00';
             document.getElementById('cd-secs').textContent = '00';
-            document.querySelector('.countdown-sub').textContent = '// REGISTRATIONS OPEN — closes April 22, 11:59 PM (BST)';
+            document.querySelector('.countdown-sub').textContent = '// FRICTION IS LIVE — 72 hours to build!';
             return;
         }
 
