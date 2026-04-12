@@ -1266,6 +1266,9 @@
                 <div class="entry-fee-note">
                     entry_fee: <span>&#2547;500 BDT</span> per team &mdash; payment info sent after submission
                 </div>
+                <div class="entry-fee-note" style="margin-top: 0.5rem;">
+                    battle_pass: validation &amp; delivery within <span>24 hours</span> of payment confirmation
+                </div>
 
                 <br>
                 <button type="submit" class="submit-btn">submit(application) &rarr;</button>
@@ -1410,19 +1413,106 @@
         }
     }
 
-    function handleRegister(e) {
-        e.preventDefault();
-        alert('Application submitted!\n\nYou\'ll receive payment details via email. Once payment is confirmed and your application is vetted, we\'ll send your Battle Pass code.');
+    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzp0TDHgLTDveybePQUtpnJxvBvrPzG5dGYd2w3bq3f6ORgo3xgFkWvBmjXZNhFfwvn/exec';
+
+    async function postToAppsScript(payload) {
+        const res = await fetch(APPS_SCRIPT_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify(payload),
+            redirect: 'follow'
+        });
+        return await res.json();
     }
 
-    function handleSubmit(e) {
+    async function handleRegister(e) {
         e.preventDefault();
-        const code = e.target.querySelector('.battlepass-input').value.trim();
-        if (code.length < 4) {
+        const form = e.target;
+        const btn = form.querySelector('.submit-btn');
+        btn.disabled = true;
+        btn.textContent = 'submitting...';
+
+        const teamName = form.querySelector('input[placeholder="Something memorable..."]').value.trim();
+        const teamDescription = form.querySelector('textarea').value.trim();
+
+        const memberBlocks = form.querySelectorAll('.member-block');
+        const members = [];
+        memberBlocks.forEach(block => {
+            const inputs = block.querySelectorAll('input');
+            members.push({
+                name: inputs[0].value.trim(),
+                email: inputs[1].value.trim(),
+                university: inputs[2].value.trim(),
+                age: inputs[3].value.trim()
+            });
+        });
+
+        try {
+            const data = await postToAppsScript({
+                type: 'register',
+                teamName,
+                teamDescription,
+                members
+            });
+
+            if (data.success) {
+                alert('Application submitted!\n\nCheck your email for payment instructions. Once payment is confirmed, your Battle Pass code will be sent within 24 hours.');
+                form.reset();
+            } else {
+                alert('Error: ' + data.message);
+            }
+        } catch (err) {
+            alert('Something went wrong. Please try again or contact us on Discord.');
+        }
+
+        btn.disabled = false;
+        btn.textContent = 'submit(application) →';
+    }
+
+    async function handleSubmit(e) {
+        e.preventDefault();
+        const form = e.target;
+        const btn = form.querySelector('.submit-btn');
+        btn.disabled = true;
+        btn.textContent = 'deploying...';
+
+        const battlePassCode = form.querySelector('.battlepass-input').value.trim();
+        const teamName = form.querySelectorAll('input[type="text"]')[1].value.trim();
+        const projectUrl = form.querySelectorAll('input[type="url"]')[0].value.trim();
+        const sourceCodeUrl = form.querySelectorAll('input[type="url"]')[1].value.trim();
+        const demoVideoUrl = form.querySelectorAll('input[type="url"]')[2].value.trim();
+        const notes = form.querySelector('textarea').value.trim();
+
+        if (battlePassCode.length < 4) {
             alert('Please enter a valid Battle Pass code.');
+            btn.disabled = false;
+            btn.textContent = 'deploy(project) →';
             return;
         }
-        alert('Project submitted!\n\nYour submission has been received. Good luck!');
+
+        try {
+            await postToAppsScript({
+                type: 'submit',
+                teamName,
+                battlePassCode,
+                projectUrl,
+                sourceCodeUrl,
+                demoVideoUrl,
+                notes
+            });
+
+            if (data.success) {
+                alert('Project submitted!\n\nYour submission has been received. Good luck!');
+                form.reset();
+            } else {
+                alert('Error: ' + data.message);
+            }
+        } catch (err) {
+            alert('Something went wrong. Please try again or contact us on Discord.');
+        }
+
+        btn.disabled = false;
+        btn.textContent = 'deploy(project) →';
     }
 
     // Scroll animations
