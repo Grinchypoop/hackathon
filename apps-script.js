@@ -130,58 +130,80 @@ function sendRegistrationEmail(teamName, teamCode, leadEmail) {
   const subject = 'Welcome to Friction! Your Submission is Confirmed';
 
   const htmlBody = `
-    <div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #000000; color: #e8edf2; padding: 2.5rem; border-radius: 12px;">
-      <h2 style="color: #f5c542; margin-bottom: 1.5rem;">Welcome to Friction!</h2>
+    <div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #000000; color: #e8edf2; border-radius: 12px; overflow: hidden;">
 
-      <p>Hi <strong style="color: #2dd4bf;">${teamName}</strong>,</p>
-
-      <p>Congratulations — your submission for Friction has been successfully received! We're thrilled to have you on board.</p>
-
-      <p>To complete your registration, please make your participation payment using one of the methods below.</p>
-
-      <div style="background: #111; border: 1px solid #1a1a1a; padding: 1.5rem; border-radius: 8px; margin: 1.5rem 0; text-align: center;">
-        <p style="color: #6b8299; font-size: 0.8rem; margin-bottom: 0.5rem;">YOUR TEAM CODE</p>
-        <h1 style="color: #f5c542; letter-spacing: 0.2em; font-size: 2.5rem; margin: 0;">${teamCode}</h1>
+      <!-- Header -->
+      <div style="background: linear-gradient(135deg, #111 0%, #000 100%); padding: 2.5rem 2.5rem 1.5rem; border-bottom: 2px solid #f5c542;">
+        <h1 style="color: #f5c542; margin: 0; font-size: 1.8rem; letter-spacing: 0.05em;">FRICTION</h1>
+        <p style="color: #6b8299; margin: 0.3rem 0 0; font-size: 0.85rem;">Hackathon 2026</p>
       </div>
 
-      <p>You'll need this code when making your payment — please keep it handy.</p>
+      <div style="padding: 2rem 2.5rem 2.5rem;">
 
-      <hr style="border: none; border-top: 1px solid #1a1a1a; margin: 2rem 0;">
+        <p style="font-size: 1.1rem;">Hi <strong style="color: #2dd4bf;">${teamName}</strong>,</p>
 
-      <h3 style="color: #2dd4bf;">Option 1: bKash</h3>
-      <p><strong>Step 1</strong> — Open your bKash app and ensure your account is active.</p>
-      <p><strong>Step 2</strong> — Send payment of <strong style="color: #f5c542;">৳500 BDT</strong> to:<br>
-      <span style="color: #f5c542;">+8801537252941</span></p>
-      <p><strong>Step 3</strong> — Enter your Team Code <strong style="color: #f5c542;">${teamCode}</strong> in the Reference field.</p>
-      <p><strong>Step 4</strong> — Take a screenshot of the confirmation and reply to this email.</p>
+        <p>Congratulations — your submission for Friction has been successfully received! We're thrilled to have you on board.</p>
 
-      <hr style="border: none; border-top: 1px solid #1a1a1a; margin: 2rem 0;">
+        <p>To complete your registration, please make your participation payment of <strong style="color: #f5c542; font-size: 1.1rem;">&#2547;500 BDT</strong> using one of the options below.</p>
 
-      <h3 style="color: #2dd4bf;">Option 2: Bank Transfer</h3>
-      <table style="color: #e8edf2; font-size: 0.9rem; margin: 0.5rem 0;">
-        <tr><td style="padding: 4px 12px 4px 0; color: #6b8299;">Account Name</td><td>TASFIA HASANAT KHAN</td></tr>
-        <tr><td style="padding: 4px 12px 4px 0; color: #6b8299;">Account Number</td><td>1071999750001</td></tr>
-        <tr><td style="padding: 4px 12px 4px 0; color: #6b8299;">Bank</td><td>BRAC Bank PLC</td></tr>
-        <tr><td style="padding: 4px 12px 4px 0; color: #6b8299;">Branch</td><td>DONIA BRANCH</td></tr>
-        <tr><td style="padding: 4px 12px 4px 0; color: #6b8299;">Routing Number</td><td>060271424</td></tr>
-        <tr><td style="padding: 4px 12px 4px 0; color: #6b8299;">Reference</td><td style="color: #f5c542;">Team Code: ${teamCode}</td></tr>
-      </table>
-      <p>After transfer, take a screenshot and reply to this email.</p>
+        <!-- Team Code Box -->
+        <div style="background: #111; border: 2px solid #f5c542; padding: 1.5rem; border-radius: 10px; margin: 2rem 0; text-align: center;">
+          <p style="color: #6b8299; font-size: 0.75rem; margin: 0 0 0.5rem; text-transform: uppercase; letter-spacing: 0.15em;">Your Team Code</p>
+          <h1 style="color: #f5c542; letter-spacing: 0.3em; font-size: 3rem; margin: 0; font-family: 'Courier New', monospace;">${teamCode}</h1>
+          <p style="color: #6b8299; font-size: 0.8rem; margin: 0.5rem 0 0;">You'll need this code when making your payment</p>
+        </div>
 
-      <hr style="border: none; border-top: 1px solid #1a1a1a; margin: 2rem 0;">
+        <!-- IMPORTANT WARNING -->
+        <div style="background: #1a0a0a; padding: 1.2rem 1.5rem; border-radius: 8px; border-left: 4px solid #e8395b; margin: 1.5rem 0 2rem;">
+          <p style="margin: 0; font-size: 0.95rem;">
+            <strong style="color: #e8395b;">IMPORTANT:</strong> You <strong>must</strong> include your Team Code <strong style="color: #f5c542;">${teamCode}</strong> in the reference/note field when making payment. Payments without a Team Code cannot be verified.
+          </p>
+        </div>
 
-      <p style="background: #1a1a1a; padding: 1rem; border-radius: 6px; border-left: 3px solid #e8395b;">
-        <strong style="color: #e8395b;">Important:</strong> Payments without a Team Code in the reference field cannot be verified. Please double-check before submitting.
-      </p>
+        <!-- Option 1: bKash -->
+        <div style="background: #0a0a0a; border: 1px solid #1a1a1a; border-radius: 10px; padding: 1.5rem; margin-bottom: 1.5rem;">
+          <h3 style="color: #2dd4bf; margin: 0 0 1rem; font-size: 1rem;">Option 1 — bKash (Personal)</h3>
+          <table style="width: 100%; color: #e8edf2; font-size: 0.9rem;">
+            <tr><td style="padding: 6px 0; color: #6b8299; width: 100px;">Send to</td><td style="padding: 6px 0;"><strong style="color: #f5c542;">+8801537252941</strong> (Personal)</td></tr>
+            <tr><td style="padding: 6px 0; color: #6b8299;">Amount</td><td style="padding: 6px 0;"><strong>&#2547;500 BDT</strong></td></tr>
+            <tr><td style="padding: 6px 0; color: #6b8299;">Reference</td><td style="padding: 6px 0;"><strong style="color: #f5c542;">${teamCode}</strong></td></tr>
+          </table>
+        </div>
 
-      <p>If you run into any issues, don't hesitate to reach out — we're happy to help.</p>
+        <!-- Option 2: Bank -->
+        <div style="background: #0a0a0a; border: 1px solid #1a1a1a; border-radius: 10px; padding: 1.5rem; margin-bottom: 2rem;">
+          <h3 style="color: #2dd4bf; margin: 0 0 1rem; font-size: 1rem;">Option 2 — Bank Transfer</h3>
+          <table style="width: 100%; color: #e8edf2; font-size: 0.9rem;">
+            <tr><td style="padding: 6px 0; color: #6b8299; width: 130px;">Account Name</td><td style="padding: 6px 0;">TASFIA HASANAT KHAN</td></tr>
+            <tr><td style="padding: 6px 0; color: #6b8299;">Account Number</td><td style="padding: 6px 0;">1071999750001</td></tr>
+            <tr><td style="padding: 6px 0; color: #6b8299;">Bank</td><td style="padding: 6px 0;">BRAC Bank PLC</td></tr>
+            <tr><td style="padding: 6px 0; color: #6b8299;">Branch</td><td style="padding: 6px 0;">DONIA BRANCH</td></tr>
+            <tr><td style="padding: 6px 0; color: #6b8299;">Routing Number</td><td style="padding: 6px 0;">060271424</td></tr>
+            <tr><td style="padding: 6px 0; color: #6b8299;">Reference</td><td style="padding: 6px 0;"><strong style="color: #f5c542;">Team Code: ${teamCode}</strong></td></tr>
+          </table>
+        </div>
 
-      <p>See you at Friction!</p>
+        <!-- Steps -->
+        <div style="background: #0d1117; border: 1px solid #1a1a1a; border-radius: 10px; padding: 1.5rem;">
+          <h3 style="color: #e8edf2; margin: 0 0 1rem; font-size: 1rem;">After Payment</h3>
+          <p style="margin: 0.5rem 0;"><span style="color: #f5c542; font-weight: bold;">Step 1</span> — Take a screenshot of the payment confirmation</p>
+          <p style="margin: 0.5rem 0;"><span style="color: #f5c542; font-weight: bold;">Step 2</span> — Reply to this email with the screenshot attached</p>
+          <p style="margin: 0.5rem 0;"><span style="color: #f5c542; font-weight: bold;">Step 3</span> — We'll verify and send your Battle Pass within <strong style="color: #2dd4bf;">24 hours</strong></p>
+        </div>
 
-      <p style="color: #6b8299; margin-top: 2rem;">
-        Warm regards,<br>
-        <strong style="color: #e8edf2;">Friction Hackathon Team</strong>
-      </p>
+        <p style="margin-top: 2rem;">If you run into any issues, don't hesitate to reach out — we're happy to help.</p>
+
+        <p>See you at Friction!</p>
+
+        <div style="border-top: 1px solid #1a1a1a; margin-top: 2rem; padding-top: 1.5rem;">
+          <p style="color: #6b8299; margin: 0;">
+            Warm regards,<br>
+            <strong style="color: #e8edf2;">Friction Hackathon Team</strong><br>
+            <span style="font-size: 0.8rem;">Noverse Inc</span>
+          </p>
+        </div>
+
+      </div>
     </div>
   `;
 
@@ -252,6 +274,8 @@ function onOpen() {
     .createMenu('Friction')
     .addItem('Setup Sheets', 'setupSheets')
     .addItem('Approve & Send Battle Pass', 'sendBattlePassForSelectedRow')
+    .addSeparator()
+    .addItem('Send Launch Email to All Approved Teams', 'sendLaunchEmail')
     .addToUi();
 }
 
@@ -320,6 +344,92 @@ function sendBattlePassForSelectedRow() {
   });
 
   SpreadsheetApp.getUi().alert('Battle Pass ' + code + ' sent to ' + leadEmail);
+}
+
+function sendLaunchEmail() {
+  const ui = SpreadsheetApp.getUi();
+  const confirm = ui.alert(
+    'Send Launch Email',
+    'This will email ALL approved teams that the hackathon has started and reveal the theme. Continue?',
+    ui.ButtonSet.YES_NO
+  );
+  if (confirm !== ui.Button.YES) return;
+
+  const sheet = getSheet('Registrations');
+  const data = sheet.getDataRange().getValues();
+  let sent = 0;
+
+  for (let i = 1; i < data.length; i++) {
+    const row = data[i];
+    const teamName = row[2];
+    const leadEmail = row[5]; // Member 1 Email
+    const paymentStatus = row[20];
+    const battlePass = row[21];
+
+    if (paymentStatus !== 'approved' || !leadEmail) continue;
+
+    MailApp.sendEmail({
+      to: leadEmail,
+      replyTo: FRICTION_EMAIL,
+      subject: 'FRICTION HAS STARTED — The Theme is Live!',
+      htmlBody: `
+        <div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #000000; color: #e8edf2; border-radius: 12px; overflow: hidden;">
+
+          <div style="background: linear-gradient(135deg, #111 0%, #000 100%); padding: 2.5rem 2.5rem 1.5rem; border-bottom: 2px solid #f5c542;">
+            <h1 style="color: #f5c542; margin: 0; font-size: 1.8rem; letter-spacing: 0.05em;">FRICTION</h1>
+            <p style="color: #e8395b; margin: 0.3rem 0 0; font-size: 0.85rem; font-weight: bold;">IT'S GO TIME</p>
+          </div>
+
+          <div style="padding: 2rem 2.5rem 2.5rem;">
+
+            <p style="font-size: 1.1rem;">Team <strong style="color: #2dd4bf;">${teamName}</strong>,</p>
+
+            <p>The wait is over. The theme has been revealed and the clock is ticking.</p>
+
+            <!-- Theme -->
+            <div style="background: #111; border: 2px solid #f5c542; padding: 2rem; border-radius: 10px; margin: 2rem 0; text-align: center;">
+              <p style="color: #6b8299; font-size: 0.75rem; margin: 0 0 0.5rem; text-transform: uppercase; letter-spacing: 0.15em;">The Theme</p>
+              <h1 style="color: #f5c542; font-size: 3rem; margin: 0; letter-spacing: 0.1em;">FRICTION</h1>
+              <p style="color: #e8edf2; margin: 1rem 0 0; font-size: 0.95rem;">One word. Infinite interpretations.</p>
+            </div>
+
+            <div style="background: #0a0a0a; border: 1px solid #1a1a1a; border-radius: 10px; padding: 1.5rem; margin: 1.5rem 0;">
+              <p style="margin: 0; line-height: 1.7;">
+                Something slows everything down. We've spent decades trying to remove it — faster payments, smoother interfaces, instant everything.<br><br>
+                But maybe we got that wrong.<br><br>
+                Your job is not to remove friction. Your job is to <strong style="color: #f5c542;">understand</strong> it. Build something that takes a position.
+              </p>
+            </div>
+
+            <p>We don't care what you build. We care <em>why</em>. Interpret the theme however you want — social friction, mechanical friction, cognitive friction, creative friction. Take a stance. Ship it.</p>
+
+            <!-- Reminder -->
+            <div style="background: #0d1117; border: 1px solid #1a1a1a; border-radius: 10px; padding: 1.5rem; margin: 1.5rem 0;">
+              <h3 style="color: #2dd4bf; margin: 0 0 1rem; font-size: 1rem;">Quick Reminder</h3>
+              <p style="margin: 0.3rem 0;"><strong style="color: #f5c542;">Time:</strong> 72 hours starting now</p>
+              <p style="margin: 0.3rem 0;"><strong style="color: #f5c542;">Battle Pass:</strong> ${battlePass}</p>
+              <p style="margin: 0.3rem 0;"><strong style="color: #f5c542;">Submit at:</strong> friction hackathon website > Final Submission tab</p>
+            </div>
+
+            <p>You've got 72 hours. Make them count.</p>
+
+            <p>Good luck.</p>
+
+            <div style="border-top: 1px solid #1a1a1a; margin-top: 2rem; padding-top: 1.5rem;">
+              <p style="color: #6b8299; margin: 0;">
+                <strong style="color: #e8edf2;">Friction Hackathon Team</strong><br>
+                <span style="font-size: 0.8rem;">Noverse Inc</span>
+              </p>
+            </div>
+
+          </div>
+        </div>
+      `
+    });
+    sent++;
+  }
+
+  ui.alert('Launch email sent to ' + sent + ' approved team(s)!');
 }
 
 function generateBattlePass() {
