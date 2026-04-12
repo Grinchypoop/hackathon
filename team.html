@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FRICTION — The Team</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #000000;
+            --surface: #0a0a0a;
+            --surface-2: #111111;
+            --border: #1a1a1a;
+            --text: #e8edf2;
+            --muted: #6b8299;
+            --yellow: #f5c542;
+            --pink: #e8395b;
+            --cyan: #2dd4bf;
+            --comment: #546e7a;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        nav .logo {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        nav .logo a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        nav .logo .sym { color: var(--pink); }
+        nav .logo .fn { color: var(--yellow); }
+        nav .logo .paren { color: var(--cyan); }
+
+        nav .nav-links a {
+            color: var(--muted);
+            text-decoration: none;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            transition: color 0.3s;
+            margin-left: 2rem;
+        }
+
+        nav .nav-links a:hover { color: var(--yellow); }
+
+        /* Page content */
+        .page-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 8rem 2rem 4rem;
+        }
+
+        .section-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--comment);
+            margin-bottom: 1rem;
+        }
+
+        .section-label .comment-sym { color: var(--muted); }
+        .section-label .tag { color: var(--cyan); }
+
+        h2 {
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 0.5rem;
+        }
+
+        .highlight { color: var(--yellow); }
+
+        /* Team grid */
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .team-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2.5rem 2rem;
+            text-align: center;
+            transition: border-color 0.3s, transform 0.3s;
+        }
+
+        .team-card:hover {
+            border-color: var(--yellow);
+            transform: translateY(-4px);
+        }
+
+        .team-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin: 0 auto 1.5rem;
+            border: 2px solid var(--border);
+            transition: border-color 0.3s;
+        }
+
+        .team-card:hover .team-avatar {
+            border-color: var(--yellow);
+        }
+
+        .team-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .team-card h4 {
+            color: var(--text);
+            font-size: 1.2rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .team-role {
+            color: var(--yellow);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: block;
+        }
+
+        .team-bio {
+            color: var(--muted);
+            font-size: 0.85rem;
+            line-height: 1.6;
+            display: block;
+            margin: 1.2rem 0;
+        }
+
+        .team-linkedin {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            transition: background 0.3s, border-color 0.3s;
+        }
+
+        .team-linkedin:hover {
+            background: #0a66c2;
+            border-color: #0a66c2;
+        }
+
+        /* Organizer message */
+        .organizer-message {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-left: 3px solid var(--yellow);
+            border-radius: 10px;
+            padding: 2rem 2.5rem;
+            margin: 3rem 0;
+            font-size: 1rem;
+            line-height: 1.8;
+            color: var(--text);
+            font-style: italic;
+        }
+
+        .organizer-message .sig {
+            margin-top: 1.5rem;
+            font-style: normal;
+            color: var(--muted);
+            font-size: 0.85rem;
+        }
+
+        .organizer-message .sig strong {
+            color: var(--yellow);
+        }
+
+        /* Divider */
+        .divider {
+            width: 60px;
+            height: 2px;
+            background: var(--border);
+            margin: 3rem auto;
+        }
+
+        /* Back link */
+        .back-link {
+            display: inline-block;
+            margin-top: 2rem;
+            color: var(--muted);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .back-link:hover { color: var(--yellow); }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 3rem 2rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--comment);
+            border-top: 1px solid var(--border);
+        }
+
+        footer .tag { color: var(--pink); }
+        footer .attr { color: var(--yellow); }
+
+        /* Fade in */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s, transform 0.6s;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @media (max-width: 600px) {
+            .team-grid { grid-template-columns: 1fr; }
+            .page-content { padding: 6rem 1.5rem 3rem; }
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div class="logo"><a href="index.html"><span class="sym">$</span> <span class="fn">friction</span><span class="paren">()</span></a></div>
+    <div class="nav-links">
+        <a href="index.html">home</a>
+        <a href="index.html#register">register</a>
+    </div>
+</nav>
+
+<div class="page-content">
+
+    <section class="fade-in">
+        <div class="section-label"><span class="comment-sym">//</span> <span class="tag">team</span></div>
+        <h2>Built by people who <span class="highlight">get it.</span></h2>
+        <p style="color: var(--muted); margin-top: 0.5rem; max-width: 500px;">The people behind Friction. We've been where you are — building, shipping, figuring it out.</p>
+
+        <div class="team-grid">
+            <div class="team-card">
+                <div class="team-avatar"><img src="mehtaz.jpg" alt="Mehtaz"></div>
+                <h4>Mehtaz</h4>
+                <span class="team-role">Co-founder & CEO, Noverse Inc</span>
+                <span class="team-bio">CEO of Noverse Inc. 2x startup founder who lives for the joy of building things, breaking them, and building them again.</span>
+                <a href="https://www.linkedin.com/in/mehtaz-haque-/" target="_blank" class="team-linkedin">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="#fff"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                </a>
+            </div>
+            <div class="team-card">
+                <div class="team-avatar"><img src="vasanth.jpg" alt="Vasanth Sreeram"></div>
+                <h4>Vasanth Sreeram</h4>
+                <span class="team-role">Co-founder & CTO, Noverse Inc</span>
+                <span class="team-bio">CTO of Noverse Inc. Full stack developer who built tech for NTU. 3x startup founder. AI training enthusiast. Believes the best way to learn is to ship.</span>
+                <a href="https://www.linkedin.com/in/vasanthsreeram/" target="_blank" class="team-linkedin">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="#fff"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <section class="fade-in">
+        <div class="section-label"><span class="comment-sym">//</span> <span class="tag">message</span></div>
+        <h2>A note from the <span class="highlight">organizers.</span></h2>
+
+        <div class="organizer-message">
+            "We built Friction because we believe the best ideas come from constraints, not comfort. We've been in your shoes — building things late at night, figuring things out as we go, shipping before we felt ready. This hackathon isn't about perfection. It's about taking a stance and building something real. We can't wait to see what you create."
+            <div class="sig">— <strong>Mehtaz</strong> & <strong>Vasanth</strong>, Noverse Inc</div>
+        </div>
+
+        <a href="index.html" class="back-link">&larr; back to friction()</a>
+    </section>
+
+</div>
+
+<footer>
+    &lt;<span class="tag">friction</span> <span class="attr">year</span>="2026" /&gt;
+</footer>
+
+<script>
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) entry.target.classList.add('visible');
+        });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
