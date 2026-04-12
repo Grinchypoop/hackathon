@@ -70,38 +70,6 @@ function doPost(e) {
 }
 
 function doGet(e) {
-  // Handle JSONP requests from frontend
-  if (e.parameter && e.parameter.payload) {
-    try {
-      const data = JSON.parse(e.parameter.payload);
-      let result;
-
-      if (data.type === 'register') {
-        result = handleRegistration(data);
-      } else if (data.type === 'submit') {
-        result = handleSubmission(data);
-      } else {
-        result = { success: false, message: 'Unknown request type' };
-      }
-
-      // JSONP response
-      if (e.parameter.callback) {
-        const resultObj = JSON.parse(result.getContent());
-        return ContentService
-          .createTextOutput(e.parameter.callback + '(' + JSON.stringify(resultObj) + ')')
-          .setMimeType(ContentService.MimeType.JAVASCRIPT);
-      }
-      return result;
-    } catch (err) {
-      if (e.parameter.callback) {
-        return ContentService
-          .createTextOutput(e.parameter.callback + '(' + JSON.stringify({ success: false, message: err.toString() }) + ')')
-          .setMimeType(ContentService.MimeType.JAVASCRIPT);
-      }
-      return jsonResponse({ success: false, message: err.toString() });
-    }
-  }
-
   return jsonResponse({ status: 'ok' });
 }
 

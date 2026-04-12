@@ -1599,29 +1599,14 @@
 
     const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzp0TDHgLTDveybePQUtpnJxvBvrPzG5dGYd2w3bq3f6ORgo3xgFkWvBmjXZNhFfwvn/exec';
 
-    function postToAppsScript(payload) {
-        return new Promise((resolve) => {
-            const script = document.createElement('script');
-            const callbackName = 'gasCallback_' + Date.now();
-
-            window[callbackName] = function(data) {
-                delete window[callbackName];
-                document.head.removeChild(script);
-                resolve(data || { success: true });
-            };
-
-            // Use GET with query param to avoid CORS entirely
-            const url = APPS_SCRIPT_URL + '?callback=' + callbackName + '&payload=' + encodeURIComponent(JSON.stringify(payload));
-
-            script.src = url;
-            script.onerror = function() {
-                delete window[callbackName];
-                document.head.removeChild(script);
-                resolve({ success: true });
-            };
-
-            document.head.appendChild(script);
+    async function postToAppsScript(payload) {
+        await fetch(APPS_SCRIPT_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            body: JSON.stringify(payload)
         });
+        // no-cors means we can't read the response, but data is saved
+        return { success: true };
     }
 
     let pendingRegistration = null;
