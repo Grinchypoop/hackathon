@@ -1857,7 +1857,7 @@
         });
 
         // Store data and show warning modal
-        pendingRegistration = { teamName, teamDescription, members, form };
+        pendingRegistration = { teamName, teamDescription, leadPhone, members, form };
         document.getElementById('paymentModal').classList.add('active');
     }
 
@@ -1870,7 +1870,7 @@
         document.getElementById('paymentModal').classList.remove('active');
         if (!pendingRegistration) return;
 
-        const { teamName, teamDescription, members, form } = pendingRegistration;
+        const { teamName, teamDescription, leadPhone, members, form } = pendingRegistration;
         const btn = form.querySelector('.submit-btn');
         btn.disabled = true;
         btn.textContent = 'submitting...';
