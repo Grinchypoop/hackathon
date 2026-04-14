@@ -25,8 +25,8 @@ function setupSheets() {
   if (!reg) {
     reg = ss.insertSheet('Registrations');
   }
-  reg.getRange(1, 1, 1, 22).setValues([[
-    'Timestamp', 'Team Code', 'Team Name', 'Team Description',
+  reg.getRange(1, 1, 1, 23).setValues([[
+    'Timestamp', 'Team Code', 'Team Name', 'Team Description', 'Lead Phone',
     'Member 1 Name', 'Member 1 Email', 'Member 1 University', 'Member 1 Age',
     'Member 2 Name', 'Member 2 Email', 'Member 2 University', 'Member 2 Age',
     'Member 3 Name', 'Member 3 Email', 'Member 3 University', 'Member 3 Age',
@@ -111,7 +111,8 @@ function handleRegistration(data) {
     new Date().toISOString(),
     teamCode,
     data.teamName,
-    data.teamDescription
+    data.teamDescription,
+    data.leadPhone || ''
   ];
 
   // Add member data (up to 4 members, 4 fields each)
@@ -240,10 +241,10 @@ function handleSubmission(data) {
 
   for (let i = 1; i < regData.length; i++) {
     const row = regData[i];
-    // Columns: 0=timestamp, 1=teamCode, 2=teamName, 3=desc, 4-7=m1, 8-11=m2, 12-15=m3, 16-19=m4, 20=paymentStatus, 21=battlePass
+    // Columns: 0=timestamp, 1=teamCode, 2=teamName, 3=desc, 4=leadPhone, 5-8=m1, 9-12=m2, 13-16=m3, 17-20=m4, 21=paymentStatus, 22=battlePass
     const teamName = row[2].toString().toLowerCase();
-    const paymentStatus = row[20];
-    const battlePass = row[21];
+    const paymentStatus = row[21];
+    const battlePass = row[22];
 
     if (teamName === data.teamName.toLowerCase() &&
         battlePass.toString().toUpperCase() === data.battlePassCode.toUpperCase() &&
@@ -304,9 +305,9 @@ function sendBattlePassForSelectedRow() {
   }
 
   const teamName = sheet.getRange(row, 3).getValue();       // Column C = Team Name
-  const leadEmail = sheet.getRange(row, 6).getValue();       // Column F = Member 1 Email
-  const existingCode = sheet.getRange(row, 22).getValue();   // Column V = Battle Pass Code
-  const currentStatus = sheet.getRange(row, 21).getValue();  // Column U = Payment Status
+  const leadEmail = sheet.getRange(row, 7).getValue();       // Column G = Member 1 Email
+  const existingCode = sheet.getRange(row, 23).getValue();   // Column W = Battle Pass Code
+  const currentStatus = sheet.getRange(row, 22).getValue();  // Column V = Payment Status
 
   if (!leadEmail) {
     SpreadsheetApp.getUi().alert('No lead email found for this row.');
@@ -323,8 +324,8 @@ function sendBattlePassForSelectedRow() {
   const code = existingCode || generateBattlePass();
 
   // Update sheet
-  sheet.getRange(row, 21).setValue('approved');  // Payment Status
-  sheet.getRange(row, 22).setValue(code);        // Battle Pass Code
+  sheet.getRange(row, 22).setValue('approved');  // Payment Status
+  sheet.getRange(row, 23).setValue(code);        // Battle Pass Code
 
   // Email the battle pass
   MailApp.sendEmail({
@@ -377,9 +378,9 @@ function sendLaunchEmail() {
   for (let i = 1; i < data.length; i++) {
     const row = data[i];
     const teamName = row[2];
-    const leadEmail = row[5]; // Member 1 Email
-    const paymentStatus = row[20];
-    const battlePass = row[21];
+    const leadEmail = row[6]; // Member 1 Email
+    const paymentStatus = row[21];
+    const battlePass = row[22];
 
     if (paymentStatus !== 'approved' || !leadEmail) continue;
 
