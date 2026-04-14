@@ -203,11 +203,11 @@ function sendRegistrationEmail(teamName, teamCode, leadEmail) {
         <div style="background: #0d1117; border: 1px solid #1a1a1a; border-radius: 10px; padding: 1.5rem;">
           <h3 style="color: #e8edf2; margin: 0 0 1rem; font-size: 1rem;">After Payment</h3>
           <p style="margin: 0.5rem 0;"><span style="color: #f5c542; font-weight: bold;">Step 1</span> — Take a screenshot of the payment confirmation</p>
-          <p style="margin: 0.5rem 0;"><span style="color: #f5c542; font-weight: bold;">Step 2</span> — Reply to this email with the screenshot attached</p>
+          <p style="margin: 0.5rem 0;"><span style="color: #f5c542; font-weight: bold;">Step 2</span> — Email the screenshot to <strong style="color: #2dd4bf;">frictionteam@gmail.com</strong></p>
           <p style="margin: 0.5rem 0;"><span style="color: #f5c542; font-weight: bold;">Step 3</span> — We'll verify and send your Battle Pass within <strong style="color: #2dd4bf;">24 hours</strong></p>
         </div>
 
-        <p style="margin-top: 2rem;">If you run into any issues, don't hesitate to reach out — we're happy to help.</p>
+        <p style="margin-top: 2rem;">If you run into any issues, email us at <strong style="color: #2dd4bf;">frictionteam@gmail.com</strong> — we're happy to help.</p>
 
         <p>See you at Friction!</p>
 
