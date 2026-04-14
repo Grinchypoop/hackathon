@@ -1818,11 +1818,8 @@
     const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzp0TDHgLTDveybePQUtpnJxvBvrPzG5dGYd2w3bq3f6ORgo3xgFkWvBmjXZNhFfwvn/exec';
 
     async function postToAppsScript(payload) {
-        const res = await fetch(APPS_SCRIPT_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'text/plain' },
-            body: JSON.stringify(payload)
-        });
+        const url = APPS_SCRIPT_URL + '?payload=' + encodeURIComponent(JSON.stringify(payload));
+        const res = await fetch(url, { redirect: 'follow' });
         return await res.json();
     }
 
