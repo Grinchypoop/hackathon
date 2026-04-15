@@ -11,7 +11,7 @@
 // ============================================
 
 const SHEET_ID = '1WpbFdN8lA9y0PjnSYXUjxYmZanPL-LkkfugUkz-IQfM';
-const FRICTION_EMAIL = 'friction@noverseinc.com';
+const FRICTION_EMAIL = 'frictionteam@noverseinc.com';
 
 function getSheet(name) {
   return SpreadsheetApp.openById(SHEET_ID).getSheetByName(name);
