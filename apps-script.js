@@ -292,6 +292,10 @@ function onOpen() {
     .addItem('Approve & Send Battle Pass', 'sendBattlePassForSelectedRow')
     .addSeparator()
     .addItem('Send Launch Email to All Approved Teams', 'sendLaunchEmail')
+    .addSeparator()
+    .addItem('Send 24h Reminder — Discord Invite', 'send24hReminderEmail')
+    .addItem('Send 12h Reminder — Submissions Due', 'send12hReminderEmail')
+    .addItem('Send 1h Reminder — Final Warning', 'send1hReminderEmail')
     .addToUi();
 }
 
