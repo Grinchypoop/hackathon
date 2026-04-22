@@ -134,6 +134,40 @@
         .phase-num.cyan { background: var(--cyan); color: #000; }
         .phase-num.green { background: var(--green); color: #000; }
 
+        .phase-num.done { background: #22c55e; color: #000; }
+        .phase-num.done::after { content: ' ✓'; }
+
+        .phase.completed { opacity: 0.5; }
+        .phase.completed::before { background: #22c55e; }
+
+        .phase.active::before { background: var(--yellow); box-shadow: 0 0 10px rgba(245, 197, 66, 0.4); }
+        .phase.active { border-left: none; }
+
+        .phase-status {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            padding: 3px 10px;
+            border-radius: 20px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+        .phase-status.complete {
+            background: rgba(34, 197, 94, 0.15);
+            color: #22c55e;
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+        .phase-status.in-progress {
+            background: rgba(245, 197, 66, 0.15);
+            color: #f5c542;
+            border: 1px solid rgba(245, 197, 66, 0.3);
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 5px rgba(245, 197, 66, 0.2); }
+            50% { box-shadow: 0 0 15px rgba(245, 197, 66, 0.4); }
+        }
+
         .phase h3 {
             font-size: 1.2rem;
             color: var(--text);
@@ -316,9 +350,10 @@
 
     <!-- Phase 1: Register -->
     <section class="fade-in">
-        <div class="phase">
+        <div class="phase completed">
             <div class="phase-header">
-                <span class="phase-num">Phase 1</span>
+                <span class="phase-num done">Phase 1</span>
+                <span class="phase-status complete">Complete</span>
             </div>
             <h3>Register Your Team</h3>
             <p>Head to the <a href="index.html#register" style="color: var(--cyan);">registration form</a> and fill in your team details:</p>
@@ -333,9 +368,10 @@
 
     <!-- Phase 2: Payment -->
     <section class="fade-in">
-        <div class="phase">
+        <div class="phase completed">
             <div class="phase-header">
-                <span class="phase-num pink">Phase 2</span>
+                <span class="phase-num done">Phase 2</span>
+                <span class="phase-status complete">Complete</span>
             </div>
             <h3>Complete Payment</h3>
             <p>After registering, the team lead will receive an email with a <span class="hl">Team Code</span> and payment instructions.</p>
@@ -351,9 +387,10 @@
 
     <!-- Phase 3: Battle Pass -->
     <section class="fade-in">
-        <div class="phase">
+        <div class="phase completed">
             <div class="phase-header">
-                <span class="phase-num cyan">Phase 3</span>
+                <span class="phase-num done">Phase 3</span>
+                <span class="phase-status complete">Complete</span>
             </div>
             <h3>Receive Your Battle Pass</h3>
             <p>Once payment is verified, the team lead will receive a <span class="hl">Battle Pass code</span> (format: XXXX-XXXX) via email.</p>
@@ -367,13 +404,14 @@
 
     <!-- Phase 4: Build -->
     <section class="fade-in">
-        <div class="phase">
+        <div class="phase active">
             <div class="phase-header">
                 <span class="phase-num green">Phase 4</span>
+                <span class="phase-status in-progress">In Progress</span>
             </div>
             <h3>Build (72 Hours)</h3>
-            <p>On <span class="hl">April 23 at 12:00 AM (BST)</span>, the theme will be revealed and the clock starts.</p>
-            <p>You have exactly <strong>72 hours</strong> to ideate, prototype, build, and submit your project.</p>
+            <p>The theme has been revealed: <strong style="color: var(--yellow);">FRICTION</strong>. The clock is ticking.</p>
+            <p>You have <strong>72 hours</strong> to ideate, prototype, build, and submit your project. Deadline: <span class="warn">April 26, 12:00 AM (BST)</span>.</p>
             <p>Interpret the theme however you want. We don't care what you build — we care <em>why</em>.</p>
         </div>
     </section>

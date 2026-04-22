@@ -448,6 +448,237 @@ function sendLaunchEmail() {
   ui.alert('Launch email sent to ' + sent + ' approved team(s)!');
 }
 
+function send24hReminderEmail() {
+  const ui = SpreadsheetApp.getUi();
+  const confirm = ui.alert(
+    'Send 24h Reminder',
+    'This will email ALL approved teams a 24-hour reminder with Discord link and progress update. Continue?',
+    ui.ButtonSet.YES_NO
+  );
+  if (confirm !== ui.Button.YES) return;
+
+  const sheet = getSheet('Registrations');
+  const data = sheet.getDataRange().getValues();
+  let sent = 0;
+
+  for (let i = 1; i < data.length; i++) {
+    const row = data[i];
+    const teamName = row[2];
+    const leadEmail = row[6];
+    const paymentStatus = row[21];
+    const battlePass = row[22];
+
+    if (paymentStatus !== 'approved' || !leadEmail) continue;
+
+    MailApp.sendEmail({
+      to: leadEmail,
+      replyTo: FRICTION_EMAIL,
+      subject: 'FRICTION — 48 Hours Remaining. Join the Discord.',
+      htmlBody: `
+        <div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #000000; color: #e8edf2; border-radius: 12px; overflow: hidden;">
+
+          <div style="background: linear-gradient(135deg, #111 0%, #000 100%); padding: 2.5rem 2.5rem 1.5rem; border-bottom: 2px solid #2dd4bf;">
+            <h1 style="color: #f5c542; margin: 0; font-size: 1.8rem; letter-spacing: 0.05em;">FRICTION</h1>
+            <p style="color: #2dd4bf; margin: 0.3rem 0 0; font-size: 0.85rem; font-weight: bold;">24 HOURS IN — STATUS CHECK</p>
+          </div>
+
+          <div style="padding: 2rem 2.5rem 2.5rem;">
+
+            <p style="font-size: 1.1rem;">Team <strong style="color: #2dd4bf;">${teamName}</strong>,</p>
+
+            <p>You're 24 hours into the hackathon. Here's a quick status check.</p>
+
+            <!-- Progress -->
+            <div style="background: #0d1117; border: 1px solid #1a1a1a; border-radius: 10px; padding: 1.5rem; margin: 1.5rem 0;">
+              <h3 style="color: #2dd4bf; margin: 0 0 1rem; font-size: 1rem;">Progress Update</h3>
+              <p style="margin: 0.5rem 0;"><span style="color: #22c55e;">&#10003;</span> <strong>Phase 1:</strong> Registration — <span style="color: #22c55e;">Complete</span></p>
+              <p style="margin: 0.5rem 0;"><span style="color: #22c55e;">&#10003;</span> <strong>Phase 2:</strong> Payment — <span style="color: #22c55e;">Complete</span></p>
+              <p style="margin: 0.5rem 0;"><span style="color: #22c55e;">&#10003;</span> <strong>Phase 3:</strong> Battle Pass — <span style="color: #22c55e;">Complete</span></p>
+              <p style="margin: 0.5rem 0;"><span style="color: #f5c542;">&#9654;</span> <strong>Phase 4:</strong> Build — <span style="color: #f5c542;">In Progress</span></p>
+              <p style="margin: 0.5rem 0;"><span style="color: #6b8299;">&#9675;</span> <strong>Phase 5:</strong> Submit — <span style="color: #6b8299;">Pending</span></p>
+            </div>
+
+            <!-- Discord CTA -->
+            <div style="background: #111; border: 2px solid #5865F2; padding: 1.5rem; border-radius: 10px; margin: 1.5rem 0; text-align: center;">
+              <p style="color: #5865F2; font-size: 0.75rem; margin: 0 0 0.5rem; text-transform: uppercase; letter-spacing: 0.15em;">Don't build alone</p>
+              <h2 style="color: #e8edf2; font-size: 1.5rem; margin: 0 0 0.8rem;">Join our Discord</h2>
+              <p style="color: #6b8299; margin: 0 0 1rem; font-size: 0.9rem;">Ask questions, get help, connect with other teams, and stay updated with announcements.</p>
+              <a href="https://discord.gg/Fw4jk4eB" target="_blank" style="display: inline-block; background: #5865F2; color: #fff; padding: 0.8rem 2rem; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 0.95rem;">discord.gg/Fw4jk4eB</a>
+            </div>
+
+            <!-- Time reminder -->
+            <div style="background: #0d1117; border: 1px solid #1a1a1a; border-radius: 10px; padding: 1.5rem; margin: 1.5rem 0;">
+              <h3 style="color: #f5c542; margin: 0 0 1rem; font-size: 1rem;">Time Check</h3>
+              <p style="margin: 0.3rem 0;"><strong style="color: #f5c542;">Remaining:</strong> ~48 hours</p>
+              <p style="margin: 0.3rem 0;"><strong style="color: #f5c542;">Deadline:</strong> April 26, 12:00 AM (BST)</p>
+              <p style="margin: 0.3rem 0;"><strong style="color: #f5c542;">Battle Pass:</strong> ${battlePass}</p>
+              <p style="margin: 0.3rem 0;"><strong style="color: #f5c542;">Submit at:</strong> hackathon.noverseinc.com > Final Submission</p>
+            </div>
+
+            <p>Keep building. You've got this.</p>
+
+            <div style="border-top: 1px solid #1a1a1a; margin-top: 2rem; padding-top: 1.5rem;">
+              <p style="color: #6b8299; margin: 0;">
+                <strong style="color: #e8edf2;">Friction Hackathon Team</strong><br>
+                <span style="font-size: 0.8rem;">Noverse Inc</span>
+              </p>
+            </div>
+
+          </div>
+        </div>
+      `
+    });
+    sent++;
+  }
+
+  ui.alert('24h reminder sent to ' + sent + ' approved team(s)!');
+}
+
+function send12hReminderEmail() {
+  const ui = SpreadsheetApp.getUi();
+  const confirm = ui.alert(
+    'Send 12h Reminder',
+    'This will email ALL approved teams that only 12 hours remain. Continue?',
+    ui.ButtonSet.YES_NO
+  );
+  if (confirm !== ui.Button.YES) return;
+
+  const sheet = getSheet('Registrations');
+  const data = sheet.getDataRange().getValues();
+  let sent = 0;
+
+  for (let i = 1; i < data.length; i++) {
+    const row = data[i];
+    const teamName = row[2];
+    const leadEmail = row[6];
+    const paymentStatus = row[21];
+    const battlePass = row[22];
+
+    if (paymentStatus !== 'approved' || !leadEmail) continue;
+
+    MailApp.sendEmail({
+      to: leadEmail,
+      replyTo: FRICTION_EMAIL,
+      subject: '⚠️ FRICTION — 12 Hours Left to Submit',
+      htmlBody: `
+        <div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #000000; color: #e8edf2; border-radius: 12px; overflow: hidden;">
+
+          <div style="background: linear-gradient(135deg, #111 0%, #000 100%); padding: 2.5rem 2.5rem 1.5rem; border-bottom: 2px solid #e8395b;">
+            <h1 style="color: #f5c542; margin: 0; font-size: 1.8rem; letter-spacing: 0.05em;">FRICTION</h1>
+            <p style="color: #e8395b; margin: 0.3rem 0 0; font-size: 0.85rem; font-weight: bold;">12 HOURS REMAINING</p>
+          </div>
+
+          <div style="padding: 2rem 2.5rem 2.5rem;">
+
+            <p style="font-size: 1.1rem;">Team <strong style="color: #2dd4bf;">${teamName}</strong>,</p>
+
+            <div style="background: #111; border: 2px solid #e8395b; padding: 2rem; border-radius: 10px; margin: 1.5rem 0; text-align: center;">
+              <h1 style="color: #e8395b; font-size: 3rem; margin: 0;">12:00:00</h1>
+              <p style="color: #6b8299; margin: 0.5rem 0 0; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em;">Hours remaining</p>
+            </div>
+
+            <p>The clock is running out. If you haven't submitted yet, now is the time to start wrapping up.</p>
+
+            <div style="background: #0d1117; border: 1px solid #1a1a1a; border-radius: 10px; padding: 1.5rem; margin: 1.5rem 0;">
+              <h3 style="color: #e8395b; margin: 0 0 1rem; font-size: 1rem;">Submission Checklist</h3>
+              <p style="margin: 0.3rem 0;">&#9744; Hosted project URL (live & accessible)</p>
+              <p style="margin: 0.3rem 0;">&#9744; 2-minute demo video (unlisted YouTube or Google Drive)</p>
+              <p style="margin: 0.3rem 0;">&#9744; Source code link (optional but recommended)</p>
+              <p style="margin: 0.3rem 0;">&#9744; Battle Pass: <strong style="color: #f5c542;">${battlePass}</strong></p>
+            </div>
+
+            <p><strong style="color: #e8395b;">Deadline: April 26, 12:00 AM (BST)</strong> — submissions after this are invalid.</p>
+
+            <p>Submit at <a href="https://hackathon.noverseinc.com" style="color: #2dd4bf;">hackathon.noverseinc.com</a> > Final Submission tab.</p>
+
+            <div style="border-top: 1px solid #1a1a1a; margin-top: 2rem; padding-top: 1.5rem;">
+              <p style="color: #6b8299; margin: 0;">
+                <strong style="color: #e8edf2;">Friction Hackathon Team</strong><br>
+                <span style="font-size: 0.8rem;">Noverse Inc</span>
+              </p>
+            </div>
+
+          </div>
+        </div>
+      `
+    });
+    sent++;
+  }
+
+  ui.alert('12h reminder sent to ' + sent + ' approved team(s)!');
+}
+
+function send1hReminderEmail() {
+  const ui = SpreadsheetApp.getUi();
+  const confirm = ui.alert(
+    'Send 1h Final Reminder',
+    'This will email ALL approved teams that only 1 HOUR remains. Continue?',
+    ui.ButtonSet.YES_NO
+  );
+  if (confirm !== ui.Button.YES) return;
+
+  const sheet = getSheet('Registrations');
+  const data = sheet.getDataRange().getValues();
+  let sent = 0;
+
+  for (let i = 1; i < data.length; i++) {
+    const row = data[i];
+    const teamName = row[2];
+    const leadEmail = row[6];
+    const paymentStatus = row[21];
+    const battlePass = row[22];
+
+    if (paymentStatus !== 'approved' || !leadEmail) continue;
+
+    MailApp.sendEmail({
+      to: leadEmail,
+      replyTo: FRICTION_EMAIL,
+      subject: '🚨 FRICTION — 1 HOUR LEFT. Submit NOW.',
+      htmlBody: `
+        <div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #000000; color: #e8edf2; border-radius: 12px; overflow: hidden;">
+
+          <div style="background: linear-gradient(135deg, #1a0000 0%, #000 100%); padding: 2.5rem 2.5rem 1.5rem; border-bottom: 3px solid #e8395b;">
+            <h1 style="color: #e8395b; margin: 0; font-size: 1.8rem; letter-spacing: 0.05em;">FRICTION</h1>
+            <p style="color: #e8395b; margin: 0.3rem 0 0; font-size: 0.85rem; font-weight: bold;">FINAL WARNING</p>
+          </div>
+
+          <div style="padding: 2rem 2.5rem 2.5rem;">
+
+            <p style="font-size: 1.1rem;">Team <strong style="color: #2dd4bf;">${teamName}</strong>,</p>
+
+            <div style="background: #1a0000; border: 3px solid #e8395b; padding: 2.5rem; border-radius: 10px; margin: 1.5rem 0; text-align: center;">
+              <h1 style="color: #e8395b; font-size: 4rem; margin: 0; letter-spacing: 0.1em;">01:00:00</h1>
+              <p style="color: #e8395b; margin: 0.5rem 0 0; font-size: 1rem; text-transform: uppercase; letter-spacing: 0.15em; font-weight: bold;">Final hour</p>
+            </div>
+
+            <p style="font-size: 1.1rem;"><strong>This is it.</strong> You have <strong style="color: #e8395b;">1 hour</strong> to submit your project.</p>
+
+            <p>If you haven't submitted yet, do it <strong>right now</strong>:</p>
+
+            <div style="text-align: center; margin: 1.5rem 0;">
+              <a href="https://hackathon.noverseinc.com" style="display: inline-block; background: #e8395b; color: #fff; padding: 1rem 2.5rem; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 1.1rem; letter-spacing: 0.05em;">SUBMIT NOW</a>
+            </div>
+
+            <p style="color: #6b8299;">Battle Pass: <strong style="color: #f5c542;">${battlePass}</strong></p>
+            <p style="color: #e8395b; font-weight: bold;">Deadline: April 26, 12:00 AM (BST) — no extensions, no exceptions.</p>
+
+            <div style="border-top: 1px solid #1a1a1a; margin-top: 2rem; padding-top: 1.5rem;">
+              <p style="color: #6b8299; margin: 0;">
+                <strong style="color: #e8edf2;">Friction Hackathon Team</strong><br>
+                <span style="font-size: 0.8rem;">Noverse Inc</span>
+              </p>
+            </div>
+
+          </div>
+        </div>
+      `
+    });
+    sent++;
+  }
+
+  ui.alert('FINAL 1h reminder sent to ' + sent + ' approved team(s)!');
+}
+
 function generateBattlePass() {
   const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
   let code = '';
