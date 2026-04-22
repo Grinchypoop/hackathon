@@ -1557,74 +1557,22 @@
 
         <!-- Tabs -->
         <div class="form-tabs">
-            <button class="form-tab active" onclick="switchTab('register-panel', this)">Register</button>
-            <button class="form-tab" onclick="switchTab('submit-panel', this)">Final Submission</button>
+            <button class="form-tab" onclick="switchTab('register-panel', this)">Register</button>
+            <button class="form-tab active-green" onclick="switchTab('submit-panel', this)">Final Submission</button>
         </div>
 
-        <!-- REGISTER PANEL -->
-        <div id="register-panel" class="form-panel active">
-            <h2>Apply to <span class="highlight">compete.</span></h2>
-            <p class="sub">Register your team. Please add video links to each member's resume in the team description. Video links should be unlisted YouTube or Google Drive.</p>
-
-            <form id="registrationForm" onsubmit="handleRegister(event)">
-                <div class="form-group">
-                    <label>team_name <span class="req">*</span></label>
-                    <input type="text" placeholder="Something memorable..." required>
-                </div>
-
-                <div class="form-group">
-                    <label>team_description <span class="req">*</span></label>
-                    <textarea placeholder="Why did you guys sign up together? Tell us about your team. Please include video links (unlisted YouTube or Google Drive)." required></textarea>
-                </div>
-
-                <div id="membersContainer">
-                    <div class="member-block">
-                        <div class="member-accent"></div>
-                        <h4>team[0] &mdash; Lead</h4>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label>name <span class="req">*</span></label>
-                                <input type="text" placeholder="Your name" required>
-                            </div>
-                            <div class="form-group">
-                                <label>email <span class="req">*</span></label>
-                                <input type="email" placeholder="you@email.com" required>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label>phone <span class="req">*</span></label>
-                                <input type="tel" placeholder="+880..." required>
-                            </div>
-                            <div class="form-group">
-                                <label>university <span class="req">*</span></label>
-                                <input type="text" placeholder="e.g. BUET, DU, NSU..." required>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label>age <span class="req">*</span></label>
-                            <input type="number" placeholder="e.g. 20" min="13" max="99" required>
-                        </div>
-
-                    </div>
-                </div>
-
-                <button type="button" class="add-member-btn" onclick="addMember()">+ add team member</button>
-
-                <div class="entry-fee-note">
-                    entry_fee: <span>&#2547;500 BDT</span> per team &mdash; payment info sent after submission
-                </div>
-                <div class="entry-fee-note" style="margin-top: 0.5rem;">
-                    battle_pass: validation &amp; delivery within <span>24 hours</span> of payment confirmation
-                </div>
-
-                <br>
-                <button type="submit" class="submit-btn">submit(application) &rarr;</button>
-            </form>
+        <!-- REGISTER PANEL (CLOSED) -->
+        <div id="register-panel" class="form-panel">
+            <h2>Registrations <span class="highlight" style="color: #e8395b;">closed.</span></h2>
+            <p class="sub" style="margin-top: 1rem; font-size: 1.1rem;">Registrations closed on April 22, 11:59 PM (BST).</p>
+            <p class="sub" style="margin-top: 0.5rem;">If you're already registered, head to the <strong style="color: #2dd4bf; cursor: pointer;" onclick="switchTab('submit-panel', document.querySelectorAll('.form-tab')[1])">Final Submission</strong> tab to submit your project.</p>
+            <div style="margin-top: 2rem; padding: 1.5rem; border: 1px solid #1a1a1a; border-radius: 10px; background: #0d1117; text-align: center;">
+                <p style="color: #6b8299; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem;">// registration.status = <span style="color: #e8395b;">"closed"</span></p>
+            </div>
         </div>
 
         <!-- FINAL SUBMISSION PANEL -->
-        <div id="submit-panel" class="form-panel">
+        <div id="submit-panel" class="form-panel active">
             <h2>Final <span class="highlight">submission.</span></h2>
             <p class="sub">Got your Battle Pass? Submit your finished project here.</p>
 
@@ -1983,21 +1931,24 @@
         confettiContainer.appendChild(particle);
     }
 
-    // Countdown timer — topic reveal April 23, 2026 midnight BST (UTC+6)
-    const launchDate = new Date('2026-04-23T00:00:00+06:00').getTime();
+    // 72-hour hackathon countdown — ends April 26, 2026 midnight BST (UTC+6)
+    const hackathonStart = new Date('2026-04-23T00:00:00+06:00').getTime();
+    const hackathonEnd = hackathonStart + (72 * 60 * 60 * 1000);
 
     function updateCountdown() {
         const now = Date.now();
-        const diff = launchDate - now;
+        const diff = hackathonEnd - now;
 
         if (diff <= 0) {
             document.getElementById('cd-days').textContent = '00';
             document.getElementById('cd-hours').textContent = '00';
             document.getElementById('cd-mins').textContent = '00';
             document.getElementById('cd-secs').textContent = '00';
-            document.querySelector('.countdown-sub').textContent = '// FRICTION IS LIVE — 72 hours to build!';
+            document.querySelector('.countdown-sub').textContent = '// TIME\'S UP — submissions closed!';
             return;
         }
+
+        document.querySelector('.countdown-sub').textContent = '// time remaining to build & submit';
 
         const days = Math.floor(diff / (1000 * 60 * 60 * 24));
         const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
@@ -2013,37 +1964,13 @@
     updateCountdown();
     setInterval(updateCountdown, 1000);
 
-    // Theme reveal countdown — April 23, 2026 midnight BST (UTC+6)
-    const themeRevealDate = new Date('2026-04-23T00:00:00+06:00').getTime();
-
-    function updateThemeCountdown() {
-        const now = Date.now();
-        const diff = themeRevealDate - now;
-
-        if (diff <= 0) {
-            // Theme is live — remove blur and overlay from all hidden sections
-            document.querySelectorAll('.theme-hidden-wrapper').forEach(wrapper => {
-                const overlay = wrapper.querySelector('.theme-reveal-overlay');
-                const blurred = wrapper.querySelector('.theme-blurred');
-                if (overlay) overlay.remove();
-                if (blurred) blurred.classList.remove('theme-blurred');
-            });
-            return;
-        }
-
-        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-        const secs = Math.floor((diff % (1000 * 60)) / 1000);
-
-        document.getElementById('rc-days').textContent = String(days).padStart(2, '0');
-        document.getElementById('rc-hours').textContent = String(hours).padStart(2, '0');
-        document.getElementById('rc-mins').textContent = String(mins).padStart(2, '0');
-        document.getElementById('rc-secs').textContent = String(secs).padStart(2, '0');
-    }
-
-    updateThemeCountdown();
-    setInterval(updateThemeCountdown, 1000);
+    // Theme is live — remove blur and overlay
+    document.querySelectorAll('.theme-hidden-wrapper').forEach(wrapper => {
+        const overlay = wrapper.querySelector('.theme-reveal-overlay');
+        const blurred = wrapper.querySelector('.theme-blurred');
+        if (overlay) overlay.remove();
+        if (blurred) blurred.classList.remove('theme-blurred');
+    });
 
     // Animate hero letters on load
     document.querySelectorAll('.hero h1 .letter').forEach((letter, i) => {
