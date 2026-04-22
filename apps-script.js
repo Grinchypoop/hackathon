@@ -473,49 +473,25 @@ function send24hReminderEmail() {
     MailApp.sendEmail({
       to: leadEmail,
       replyTo: FRICTION_EMAIL,
-      subject: 'FRICTION — 48 Hours Remaining. Join the Discord.',
+      subject: 'FRICTION — Join the Discord',
       htmlBody: `
         <div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #000000; color: #e8edf2; border-radius: 12px; overflow: hidden;">
 
-          <div style="background: linear-gradient(135deg, #111 0%, #000 100%); padding: 2.5rem 2.5rem 1.5rem; border-bottom: 2px solid #2dd4bf;">
+          <div style="background: linear-gradient(135deg, #111 0%, #000 100%); padding: 2.5rem 2.5rem 1.5rem; border-bottom: 2px solid #5865F2;">
             <h1 style="color: #f5c542; margin: 0; font-size: 1.8rem; letter-spacing: 0.05em;">FRICTION</h1>
-            <p style="color: #2dd4bf; margin: 0.3rem 0 0; font-size: 0.85rem; font-weight: bold;">24 HOURS IN — STATUS CHECK</p>
           </div>
 
           <div style="padding: 2rem 2.5rem 2.5rem;">
 
             <p style="font-size: 1.1rem;">Team <strong style="color: #2dd4bf;">${teamName}</strong>,</p>
 
-            <p>You're 24 hours into the hackathon. Here's a quick status check.</p>
+            <p>If you haven't already, make sure to join our Discord server. It's where all announcements, support, and updates will be posted throughout the hackathon.</p>
 
-            <!-- Progress -->
-            <div style="background: #0d1117; border: 1px solid #1a1a1a; border-radius: 10px; padding: 1.5rem; margin: 1.5rem 0;">
-              <h3 style="color: #2dd4bf; margin: 0 0 1rem; font-size: 1rem;">Progress Update</h3>
-              <p style="margin: 0.5rem 0;"><span style="color: #22c55e;">&#10003;</span> <strong>Phase 1:</strong> Registration — <span style="color: #22c55e;">Complete</span></p>
-              <p style="margin: 0.5rem 0;"><span style="color: #22c55e;">&#10003;</span> <strong>Phase 2:</strong> Payment — <span style="color: #22c55e;">Complete</span></p>
-              <p style="margin: 0.5rem 0;"><span style="color: #22c55e;">&#10003;</span> <strong>Phase 3:</strong> Battle Pass — <span style="color: #22c55e;">Complete</span></p>
-              <p style="margin: 0.5rem 0;"><span style="color: #f5c542;">&#9654;</span> <strong>Phase 4:</strong> Build — <span style="color: #f5c542;">In Progress</span></p>
-              <p style="margin: 0.5rem 0;"><span style="color: #6b8299;">&#9675;</span> <strong>Phase 5:</strong> Submit — <span style="color: #6b8299;">Pending</span></p>
-            </div>
-
-            <!-- Discord CTA -->
-            <div style="background: #111; border: 2px solid #5865F2; padding: 1.5rem; border-radius: 10px; margin: 1.5rem 0; text-align: center;">
-              <p style="color: #5865F2; font-size: 0.75rem; margin: 0 0 0.5rem; text-transform: uppercase; letter-spacing: 0.15em;">Don't build alone</p>
+            <div style="background: #111; border: 2px solid #5865F2; padding: 2rem; border-radius: 10px; margin: 1.5rem 0; text-align: center;">
               <h2 style="color: #e8edf2; font-size: 1.5rem; margin: 0 0 0.8rem;">Join our Discord</h2>
-              <p style="color: #6b8299; margin: 0 0 1rem; font-size: 0.9rem;">Ask questions, get help, connect with other teams, and stay updated with announcements.</p>
+              <p style="color: #6b8299; margin: 0 0 1.2rem; font-size: 0.9rem;">Ask questions, get help, connect with other teams, and stay updated with announcements.</p>
               <a href="https://discord.gg/Fw4jk4eB" target="_blank" style="display: inline-block; background: #5865F2; color: #fff; padding: 0.8rem 2rem; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 0.95rem;">discord.gg/Fw4jk4eB</a>
             </div>
-
-            <!-- Time reminder -->
-            <div style="background: #0d1117; border: 1px solid #1a1a1a; border-radius: 10px; padding: 1.5rem; margin: 1.5rem 0;">
-              <h3 style="color: #f5c542; margin: 0 0 1rem; font-size: 1rem;">Time Check</h3>
-              <p style="margin: 0.3rem 0;"><strong style="color: #f5c542;">Remaining:</strong> ~48 hours</p>
-              <p style="margin: 0.3rem 0;"><strong style="color: #f5c542;">Deadline:</strong> April 26, 12:00 AM (BST)</p>
-              <p style="margin: 0.3rem 0;"><strong style="color: #f5c542;">Battle Pass:</strong> ${battlePass}</p>
-              <p style="margin: 0.3rem 0;"><strong style="color: #f5c542;">Submit at:</strong> hackathon.noverseinc.com > Final Submission</p>
-            </div>
-
-            <p>Keep building. You've got this.</p>
 
             <div style="border-top: 1px solid #1a1a1a; margin-top: 2rem; padding-top: 1.5rem;">
               <p style="color: #6b8299; margin: 0;">
