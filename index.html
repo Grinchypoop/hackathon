@@ -1557,22 +1557,69 @@
 
         <!-- Tabs -->
         <div class="form-tabs">
-            <button class="form-tab" onclick="switchTab('register-panel', this)">Register</button>
-            <button class="form-tab active-green" onclick="switchTab('submit-panel', this)">Final Submission</button>
+            <button class="form-tab active" onclick="switchTab('register-panel', this)">Register</button>
+            <button class="form-tab" onclick="switchTab('submit-panel', this)">Final Submission</button>
         </div>
 
-        <!-- REGISTER PANEL (CLOSED) -->
-        <div id="register-panel" class="form-panel">
-            <h2>Registrations <span class="highlight" style="color: #e8395b;">closed.</span></h2>
-            <p class="sub" style="margin-top: 1rem; font-size: 1.1rem;">Registrations closed on April 22, 11:59 PM (BST).</p>
-            <p class="sub" style="margin-top: 0.5rem;">If you're already registered, head to the <strong style="color: #2dd4bf; cursor: pointer;" onclick="switchTab('submit-panel', document.querySelectorAll('.form-tab')[1])">Final Submission</strong> tab to submit your project.</p>
-            <div style="margin-top: 2rem; padding: 1.5rem; border: 1px solid #1a1a1a; border-radius: 10px; background: #0d1117; text-align: center;">
-                <p style="color: #6b8299; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem;">// registration.status = <span style="color: #e8395b;">"closed"</span></p>
-            </div>
+        <!-- REGISTER PANEL -->
+        <div id="register-panel" class="form-panel active">
+            <h2>Register your <span class="highlight">team.</span></h2>
+            <p class="sub">Fill in your team details below. Team lead's email will receive all communications.</p>
+
+            <form id="registerForm" onsubmit="handleRegister(event)">
+                <div class="form-group">
+                    <label>team_name <span class="req">*</span></label>
+                    <input type="text" placeholder="Something memorable..." required>
+                </div>
+
+                <div id="membersContainer">
+                    <div class="member-block" id="member-1">
+                        <div class="member-accent"></div>
+                        <h4>team[0] — lead</h4>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>name <span class="req">*</span></label>
+                                <input type="text" placeholder="Name" required>
+                            </div>
+                            <div class="form-group">
+                                <label>email <span class="req">*</span></label>
+                                <input type="email" placeholder="email@example.com" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>phone <span class="req">*</span></label>
+                            <input type="tel" placeholder="+880..." required>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>university <span class="req">*</span></label>
+                                <input type="text" placeholder="e.g. BUET, DU, NSU..." required>
+                            </div>
+                            <div class="form-group">
+                                <label>age <span class="req">*</span></label>
+                                <input type="number" placeholder="e.g. 20" min="13" max="99" required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="button" class="add-member-btn" onclick="addMember()">+ add team member</button>
+
+                <div class="form-group">
+                    <label>team_description</label>
+                    <textarea placeholder="Tell us about your team (optional)..."></textarea>
+                </div>
+
+                <button type="submit" class="submit-btn">submit(application) &rarr;</button>
+
+                <div class="entry-fee-note">
+                    Entry fee: <span>&#2547;500 BDT</span> per team — payment details sent after submission.
+                </div>
+            </form>
         </div>
 
         <!-- FINAL SUBMISSION PANEL -->
-        <div id="submit-panel" class="form-panel active">
+        <div id="submit-panel" class="form-panel">
             <h2>Final <span class="highlight">submission.</span></h2>
             <p class="sub">Got your Battle Pass? Submit your finished project here.</p>
 
