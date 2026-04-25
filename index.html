@@ -2026,10 +2026,12 @@
 
     if (now > regDeadline) {
         const regPanel = document.getElementById('register-panel');
-        regPanel.innerHTML = '<h2 style="color: var(--pink);">Submission Closed</h2>';
+        regPanel.innerHTML = '<h2 style="color: var(--pink);">Registration Closed</h2>';
     }
 
-    if (now > subDeadline) {
+    // Auto-close submissions 5 minutes after deadline
+    const subGrace = subDeadline + (5 * 60 * 1000);
+    if (now > subGrace) {
         const subPanel = document.getElementById('submit-panel');
         subPanel.innerHTML = '<h2 style="color: var(--pink);">Submission Closed</h2>';
     }
