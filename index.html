@@ -2019,6 +2019,21 @@
         if (blurred) blurred.classList.remove('theme-blurred');
     });
 
+    // Auto-close registration & submission portals after deadlines
+    const regDeadline = new Date('2026-04-22T23:59:00+06:00').getTime();
+    const subDeadline = new Date('2026-04-26T00:00:00+06:00').getTime();
+    const now = Date.now();
+
+    if (now > regDeadline) {
+        const regPanel = document.getElementById('register-panel');
+        regPanel.innerHTML = '<h2 style="color: var(--pink);">Submission Closed</h2>';
+    }
+
+    if (now > subDeadline) {
+        const subPanel = document.getElementById('submit-panel');
+        subPanel.innerHTML = '<h2 style="color: var(--pink);">Submission Closed</h2>';
+    }
+
     // Animate hero letters on load
     document.querySelectorAll('.hero h1 .letter').forEach((letter, i) => {
         letter.style.opacity = '0';
