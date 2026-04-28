@@ -494,7 +494,7 @@ function send24hReminderEmail() {
             <div style="background: #111; border: 2px solid #5865F2; padding: 2rem; border-radius: 10px; margin: 1.5rem 0; text-align: center;">
               <h2 style="color: #e8edf2; font-size: 1.5rem; margin: 0 0 0.8rem;">Join our Discord</h2>
               <p style="color: #6b8299; margin: 0 0 1.2rem; font-size: 0.9rem;">Ask questions, get help, connect with other teams, and stay updated with announcements.</p>
-              <a href="https://discord.gg/Fw4jk4eB" target="_blank" style="display: inline-block; background: #5865F2; color: #fff; padding: 0.8rem 2rem; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 0.95rem;">discord.gg/Fw4jk4eB</a>
+              <a href="https://discord.gg/x23qdmUV" target="_blank" style="display: inline-block; background: #5865F2; color: #fff; padding: 0.8rem 2rem; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 0.95rem;">discord.gg/x23qdmUV</a>
             </div>
 
             <div style="border-top: 1px solid #1a1a1a; margin-top: 2rem; padding-top: 1.5rem;">
